@@ -7,7 +7,12 @@ void processInput(GLFWwindow *window);
 
 const unsigned int windowWidth = 1280, windowHeight = 720;
 
+// todo: add listeners and break apart file into multiple
+
 int main() {
+    // todo: implement 3d scaling
+
+
     glfwInit(); // initialize glfw
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3); // using glfw 3.x
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3); // using glfw x.3
