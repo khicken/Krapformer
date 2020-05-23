@@ -11,7 +11,7 @@ const unsigned int windowWidth = 1280, windowHeight = 720;
 
 int main() {
     // todo: implement 3d scaling
-
+    glm::ortho(0, 0, 0, 0); // gotta still study on proj and ortho stuff
 
     glfwInit(); // initialize glfw
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3); // using glfw 3.x
