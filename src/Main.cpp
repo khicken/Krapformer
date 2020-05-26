@@ -38,12 +38,14 @@ int main() {
     // shader config
     Shader rectShader("C:\\Users\\kaleb\\Desktop\\3d\\src\\shaders\\vs_default.glsl", "C:\\Users\\kaleb\\Desktop\\3d\\src\\shaders\\fs_default.glsl");
     
+    // side note: expirement with vertice values as warped
+
     float vertices[] = { // vertices of rectangle (x, y, z)
         // vertex coords     // colors          // texture coords
-        0.5f,  0.5f, 0.0f,  1.0f, 0.0f, 1.0f,  2.0f, 2.0f, // top right
-        0.5f, -0.5f, 0.0f,  0.0f, 1.0f, 0.0f,  2.0f, 0.0f,  // bottom right
+        0.5f,  0.5f, 0.0f,  1.0f, 0.0f, 1.0f,  1.0f, 1.0f, // top right
+        0.5f, -0.5f, 0.0f,  0.0f, 1.0f, 0.0f,  1.0f, 0.0f,  // bottom right
        -0.5f, -0.5f, 1.0f,  1.0f, 0.0f, 0.0f,  0.0f, 0.0f, // bottom left
-       -0.5f,  0.5f, 0.0f,  1.0f, 1.0f, 0.0f,  0.0f, 2.0f, // top left
+       -0.5f,  0.5f, 0.0f,  1.0f, 1.0f, 0.0f,  0.0f, 1.0f, // top left
     };
     unsigned int indices[] = {
         0, 1, 3, // first triangle
@@ -131,11 +133,9 @@ int main() {
         glm::mat4 model = glm::mat4(1.0f);
         glm::mat4 view = glm::mat4(1.0f);
         glm::mat4 projection = glm::mat4(1.0f);
-        model = glm::rotate(model, glm::radians(-55.0f), glm::vec3(1.0f, 0.0f, 0.0f));
+        model = glm::rotate(model, glm::radians(55.0f), glm::vec3(1.0f, 0.0f, 0.0f));
         view = glm::translate(view, glm::vec3(0.0f, 0.0f, -3.0f));
         projection = glm::perspective(glm::radians(45.0f), (float)windowWidth / (float)windowHeight, 0.1f, 100.0f);
-
-        std::cout <<"what"<<std::endl;
 
         unsigned int modelLoc = glGetUniformLocation(rectShader.ID, "model");
         unsigned int viewLoc = glGetUniformLocation(rectShader.ID, "view");
