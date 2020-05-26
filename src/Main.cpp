@@ -20,7 +20,7 @@ int main() {
     glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE); // for iOS
 #endif
 
-    GLFWwindow* window = glfwCreateWindow(windowWidth, windowHeight, "Krapformer", nullptr, nullptr);
+    GLFWwindow* window = glfwCreateWindow(windowWidth, windowHeight, "What", nullptr, nullptr);
     if(window == nullptr) { // check if glfw is ok
         std::cout << "uh glfw broke" << std::endl;
         glfwTerminate();
@@ -112,7 +112,7 @@ int main() {
     // glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 8*sizeof(float), (void*)(3*sizeof(float))); // map color coords from array
     // glEnableVertexAttribArray(1);
     glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5*sizeof(float), (void*)(3*sizeof(float))); // map texture coords from array
-    glEnableVertexAttribArray(2);
+    glEnableVertexAttribArray(1);
 
     // glBindBuffer(GL_ARRAY_BUFFER, 0); // unbind VBO, but KEEPING ebo binded, as vao is still using ebo
     // glBindVertexArray(0); // unbind vao
@@ -175,8 +175,8 @@ int main() {
         glm::mat4 model = glm::mat4(1.0f);
         glm::mat4 view = glm::mat4(1.0f);
         glm::mat4 projection = glm::mat4(1.0f);
-        model = glm::rotate(model, (float)glfwGetTime(), glm::vec3(1.0f, 0.0f, 0.0f));
-        view = glm::translate(view, glm::vec3(0.0f, 0.0f, -3.0f));
+        model = glm::rotate(model, 5*glm::sin((float)glfwGetTime()), glm::vec3(1.0f, 1.0f, 1.0f));
+        view = glm::translate(view, glm::vec3(3*glm::cos((float)glfwGetTime()), 0.0f, -10.0f));
         projection = glm::perspective(glm::radians(45.0f), (float)windowWidth / (float)windowHeight, 0.1f, 100.0f);
 
         unsigned int modelLoc = glGetUniformLocation(rectShader.ID, "model");
