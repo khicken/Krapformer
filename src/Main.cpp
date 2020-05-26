@@ -10,9 +10,6 @@ const unsigned int windowWidth = 1280, windowHeight = 720;
 // todo: add listeners and break apart file into multiple
 
 int main() {
-    // todo: implement 3d scaling
-    glm::ortho(0, 0, 0, 0); // gotta still study on proj and ortho stuff
-
     glfwInit(); // initialize glfw
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3); // using glfw 3.x
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3); // using glfw x.3
@@ -39,7 +36,7 @@ int main() {
     glfwSetFramebufferSizeCallback(window, framebufferSizeCallback); // when window resized
 
     // shader config
-    Shader rectShader("C:\\Users\\kaleb\\Desktop\\Krapformer\\src\\shaders\\vs_default.glsl", "C:\\Users\\kaleb\\Desktop\\Krapformer\\src\\shaders\\fs_default.glsl");
+    Shader rectShader("C:\\Users\\kaleb\\Desktop\\3d\\src\\shaders\\vs_default.glsl", "C:\\Users\\kaleb\\Desktop\\3d\\src\\shaders\\fs_default.glsl");
     
     float vertices[] = { // vertices of rectangle (x, y, z)
         // vertex coords     // colors          // texture coords
@@ -91,7 +88,7 @@ int main() {
     // load image, create texture and generate mipmaps
     int width, height, nrChannels;
     stbi_set_flip_vertically_on_load(true);
-    unsigned char *data = stbi_load("C:/Users/kaleb/Desktop/Krapformer/src/assets/new.jpg", &width, &height, &nrChannels, 0);
+    unsigned char *data = stbi_load("C:/Users/kaleb/Desktop/3d/src/assets/new.jpg", &width, &height, &nrChannels, 0);
     glPixelStorei(GL_UNPACK_ALIGNMENT, 1); // just in case if width and height return segmentation fault
     glPixelStorei(GL_UNPACK_ROW_LENGTH, 0);
     glPixelStorei(GL_UNPACK_SKIP_PIXELS, 0);
@@ -104,6 +101,9 @@ int main() {
     }
 
     stbi_image_free(data);
+
+    rectShader.use();
+    rectShader.setInt("texture1", 0);
 
     glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 
@@ -120,14 +120,31 @@ int main() {
         glBindTexture(GL_TEXTURE_2D, texture1);
         // glActiveTexture(GL_TEXTURE1);
         // glBindTexture(GL_TEXTURE_2D, texture2);
-        glm::mat4 transform(glm::mat4(1.0f)); // make sure to initialize matrix to identity matrix first
-        transform = glm::rotate(transform, (float)glm::sin(glfwGetTime()*4), glm::vec3(0.0f, 0.0f, 1.0f));
+        // glm::mat4 transform(glm::mat4(1.0f)); // make sure to initialize matrix to identity matrix first
+        // transform = glm::rotate(transform, (float)glm::sin(glfwGetTime()*4), glm::vec3(0.0f, 0.0f, 1.0f));
         // transform = glm::translate(transform, glm::vec3(0.5f, -0.5f, 0.0f));
 
-
-        // apply transformations through the transform identity matrix
+        // start drawing by enabling shader
         rectShader.use();
-        glUniformMatrix4fv(glGetUniformLocation(rectShader.ID, "transform"), 1, GL_FALSE, glm::value_ptr(transform));
+
+        // making 3d matrices
+        glm::mat4 model = glm::mat4(1.0f);
+        glm::mat4 view = glm::mat4(1.0f);
+        glm::mat4 projection = glm::mat4(1.0f);
+        model = glm::rotate(model, glm::radians(-55.0f), glm::vec3(1.0f, 0.0f, 0.0f));
+        view = glm::translate(view, glm::vec3(0.0f, 0.0f, -3.0f));
+        projection = glm::perspective(glm::radians(45.0f), (float)windowWidth / (float)windowHeight, 0.1f, 100.0f);
+
+        std::cout <<"what"<<std::endl;
+
+        unsigned int modelLoc = glGetUniformLocation(rectShader.ID, "model");
+        unsigned int viewLoc = glGetUniformLocation(rectShader.ID, "view");
+        glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
+        glUniformMatrix4fv(viewLoc, 1, GL_FALSE, &view[0][0]);
+
+        rectShader.setMat4("projection", projection);
+
+        // glUniformMatrix4fv(glGetUniformLocation(rectShader.ID, "transform"), 1, GL_FALSE, glm::value_ptr(transform));
 
         // draw
         glBindVertexArray(VAO); // repeatedly bind vao for triangle
