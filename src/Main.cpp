@@ -176,7 +176,7 @@ int main() {
         glm::mat4 view = glm::mat4(1.0f);
         glm::mat4 projection = glm::mat4(1.0f);
         model = glm::rotate(model, 5*glm::sin((float)glfwGetTime()), glm::vec3(1.0f, 1.0f, 1.0f));
-        view = glm::translate(view, glm::vec3(3*glm::cos((float)glfwGetTime()), 0.0f, -10.0f));
+        view = glm::translate(view, glm::vec3(3*glm::cos((float)glfwGetTime()), -1.0f, -10.0f));
         projection = glm::perspective(glm::radians(45.0f), (float)windowWidth / (float)windowHeight, 0.1f, 100.0f);
 
         unsigned int modelLoc = glGetUniformLocation(rectShader.ID, "model");
@@ -190,8 +190,12 @@ int main() {
 
         // draw
         glBindVertexArray(VAO); // repeatedly bind vao for triangle
-        glDrawArrays(GL_TRIANGLES, 0, 36); 
-
+        glDrawArrays(GL_TRIANGLES, 0, 36);
+        view = glm::translate(view, glm::vec3(3*glm::sin((float)glfwGetTime()), -3.0f, -10.0f));
+        // glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
+        glUniformMatrix4fv(viewLoc, 1, GL_FALSE, &view[0][0]);
+        // rectShader.setMat4("projection", projection);
+        glDrawArrays(GL_TRIANGLES, 0, 36);
         // end render
         glfwPollEvents();
         glfwSwapBuffers(window);
