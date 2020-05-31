@@ -7,7 +7,7 @@ void processInput(GLFWwindow *window);
 
 const unsigned int windowWidth = 1280, windowHeight = 720;
 
-// todo: add listeners and break apart file into multiple
+// todo: add listeners and break apart file into multiple, preferably hpp files? not sure if good practice.
 
 int main() {
     glfwInit(); // initialize glfw
@@ -151,6 +151,8 @@ int main() {
 
     glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 
+    // todo: create camera system tomorrow
+
     while(!glfwWindowShouldClose(window)) { // render loop(each iteration is a frame)
         // input callbacks
         processInput(window);
@@ -191,7 +193,7 @@ int main() {
         // draw
         glBindVertexArray(VAO); // repeatedly bind vao for triangle
         glDrawArrays(GL_TRIANGLES, 0, 36);
-        view = glm::translate(view, glm::vec3(3*glm::sin((float)glfwGetTime()), -3.0f, -10.0f));
+        view = glm::translate(view, glm::vec3(3*glm::sin((float)glfwGetTime()), -3.0f, -10.0f)); // another cube
         // glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
         glUniformMatrix4fv(viewLoc, 1, GL_FALSE, &view[0][0]);
         // rectShader.setMat4("projection", projection);
