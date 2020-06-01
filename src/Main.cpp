@@ -3,7 +3,7 @@
 #include "Main.h"
 
 void framebufferSizeCallback(GLFWwindow* window, int width, int height);
-void processInput(GLFWwindow *window);
+void keyCallback(GLFWwindow* window, int key, int scancode, int action, int mods);
 
 const unsigned int windowWidth = 1280, windowHeight = 720;
 
@@ -35,12 +35,14 @@ int main() {
     glViewport(0, 0, windowWidth, windowHeight);
     glfwSetFramebufferSizeCallback(window, framebufferSizeCallback); // when window resized
 
-    glEnable(GL_DEPTH_TEST); // enable z-axis depth
+    glEnable(GL_DEPTH_TEST); // enable z-axis depth, alpha channel, blending
+
+    // events
+    glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
+    glfwSetKeyCallback(window, keyCallback);
 
     // shader config
     Shader rectShader("C:\\Users\\kaleb\\Desktop\\3d\\src\\shaders\\vs_default.glsl", "C:\\Users\\kaleb\\Desktop\\3d\\src\\shaders\\fs_default.glsl");
-    
-    // side note: expirement with vertice values as warped
 
     // float vertices[] = { // vertices of rectangle (x, y, z)
     //     // vertex coords     // colors          // texture coords
@@ -151,12 +153,18 @@ int main() {
 
     glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 
-    // todo: create camera system tomorrow
+    // camera
+    glm::vec3 cameraPos = glm::vec3(0.0f, 0.0f, 5.0f);
+    glm::vec3 cameraTarget = glm::vec3(0.0f, 0.0f, 0.0f);
+    glm::vec3 cameraDirection = glm::normalize(cameraPos - cameraTarget); // subtract camera position with target vectors to result in a unit vector of the direction
+    glm::vec3 up = glm::vec3(0.0f, 1.0f, 0.0f);
+    glm::vec3 cameraRight = glm::normalize(glm::cross(up, cameraDirection));
+    glm::vec3 cameraUp = glm::cross(cameraDirection, cameraRight);
+
+    glm::mat4 projection = glm::perspective(glm::radians(45.0f), (float)windowWidth / (float)windowHeight, 0.1f, 100.0f);
+    rectShader.setMat4("projection", projection);
 
     while(!glfwWindowShouldClose(window)) { // render loop(each iteration is a frame)
-        // input callbacks
-        processInput(window);
-
         // refresh frame
         glClearColor(0.9f, 1.0f, 0.9f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -164,39 +172,35 @@ int main() {
         // render things in between
         glActiveTexture(GL_TEXTURE0);
         glBindTexture(GL_TEXTURE_2D, texture1);
-        // glActiveTexture(GL_TEXTURE1);
-        // glBindTexture(GL_TEXTURE_2D, texture2);
-        // glm::mat4 transform(glm::mat4(1.0f)); // make sure to initialize matrix to identity matrix first
-        // transform = glm::rotate(transform, (float)glm::sin(glfwGetTime()*4), glm::vec3(0.0f, 0.0f, 1.0f));
-        // transform = glm::translate(transform, glm::vec3(0.5f, -0.5f, 0.0f));
 
-        // start drawing by enabling shader
         rectShader.use();
-
-        // making 3d matrices
-        glm::mat4 model = glm::mat4(1.0f);
-        glm::mat4 view = glm::mat4(1.0f);
-        glm::mat4 projection = glm::mat4(1.0f);
-        model = glm::rotate(model, 5*glm::sin((float)glfwGetTime()), glm::vec3(1.0f, 1.0f, 1.0f));
-        view = glm::translate(view, glm::vec3(3*glm::cos((float)glfwGetTime()), -1.0f, -10.0f));
-        projection = glm::perspective(glm::radians(45.0f), (float)windowWidth / (float)windowHeight, 0.1f, 100.0f);
 
         unsigned int modelLoc = glGetUniformLocation(rectShader.ID, "model");
         unsigned int viewLoc = glGetUniformLocation(rectShader.ID, "view");
+
+        glm::mat4 model = glm::mat4(1.0f);
+        glm::mat4 view = glm::mat4(1.0f);
+        // model = glm::rotate(model, 5*glm::sin((float)glfwGetTime()), glm::vec3(1.0f, 1.0f, 1.0f));
+        model = glm::translate(model, glm::vec3(/*3*glm::cos((float)glfwGetTime())*/0.0f, 0.0f, 0.0f));
+                const float radius = 5.0f;
+        float camX = sin(glfwGetTime()) * radius;
+        float camY = sin(glfwGetTime()) * radius;
+        float camZ = cos(glfwGetTime()) * radius;
+        view = glm::lookAt(glm::vec3(camX, 0.0f, camZ), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+
+        
         glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
         glUniformMatrix4fv(viewLoc, 1, GL_FALSE, &view[0][0]);
-
-        rectShader.setMat4("projection", projection);
 
         // glUniformMatrix4fv(glGetUniformLocation(rectShader.ID, "transform"), 1, GL_FALSE, glm::value_ptr(transform));
 
         // draw
         glBindVertexArray(VAO); // repeatedly bind vao for triangle
         glDrawArrays(GL_TRIANGLES, 0, 36);
-        view = glm::translate(view, glm::vec3(3*glm::sin((float)glfwGetTime()), -3.0f, -10.0f)); // another cube
+        model = glm::translate(model, glm::vec3(/*3*glm::sin((float)glfwGetTime())*/0.0f, 1.0f, -1.0f)); // another cube
         // glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
-        glUniformMatrix4fv(viewLoc, 1, GL_FALSE, &view[0][0]);
         // rectShader.setMat4("projection", projection);
+        glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
         glDrawArrays(GL_TRIANGLES, 0, 36);
         // end render
         glfwPollEvents();
@@ -215,6 +219,6 @@ void framebufferSizeCallback(GLFWwindow* window, int width, int height) { // cal
     glViewport(0, 0, width, height);
 }
 
-void processInput(GLFWwindow *window) {
-    if(glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS) glfwSetWindowShouldClose(window, true);
+void keyCallback(GLFWwindow* window, int key, int scancode, int action, int mods) {
+    if(key == GLFW_KEY_ESCAPE) glfwSetWindowShouldClose(window, true);
 }
