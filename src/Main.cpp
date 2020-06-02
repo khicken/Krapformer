@@ -4,17 +4,33 @@
 
 void framebufferSizeCallback(GLFWwindow* window, int width, int height);
 void keyCallback(GLFWwindow* window, int key, int scancode, int action, int mods);
+void mouseCallback(GLFWwindow* window, double xpos, double ypos);
+void scrollCallback(GLFWwindow* window, double xoffset, double yoffset);
 void inputPoll(GLFWwindow* window);
 
+// window dimensions
 const unsigned int windowWidth = 1280, windowHeight = 720;
-float deltaTime = 0.0f;
-float lastTime = 0.0f;
 
-glm::vec3 cameraFront = glm::vec3(0.0f, 0.0f, -1.0f);
+// mouse
+bool mouseInit = true; // if mouse not inside winodw
+float lastPosX = windowWidth/2, lastPosY = windowHeight/2;
+float pitch = 0.0f, yaw = -90.0f; // roll not needed as pitch up/down, yaw left/right, (if 0.0 would point right cause positive x-axis points right, so -90 deg rot) roll rotates camera around z-axis
+
+// customizable mouse stuff
+float movementSpeed = 5.0f, camSpeed = movementSpeed;
+float mouseSensitivity = 0.1f;
+float fov = 45.0f;
+float minfov = 1.0f, maxfov = 45.0f;
+bool invertY = false; // invert y-movement idk why
+
+// camera
 glm::vec3 cameraPos = glm::vec3(0.0f, 0.0f, 5.0f);
+glm::vec3 cameraFront = glm::vec3(0.0f, 0.0f, -1.0f);
 glm::vec3 cameraUp = glm::vec3(0.0f, 1.0f, 0.0f);
 
-// todo: add listeners and break apart file into multiple, preferably hpp files? not sure if good practice.
+// time variables to keep program consistent based off of time, not frames
+float deltaTime = 0.0f;
+float lastTime = 0.0f;
 
 int main() {
     glfwInit(); // initialize glfw
@@ -38,27 +54,25 @@ int main() {
     glewInit();
     glewExperimental = true;
 
-    // viewport and callbacks(input)
+    // fetch monitor stats
+    const GLFWvidmode* mode = glfwGetVideoMode(glfwGetPrimaryMonitor());
+    int monitorWidth = mode->width, monitorHeight = mode->height;
+
+    // viewport and window position
     glViewport(0, 0, windowWidth, windowHeight);
+    glfwSetWindowPos(window, monitorWidth/2 - windowWidth/2, monitorHeight/2 - windowHeight/2);
+
+    glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
     glfwSetFramebufferSizeCallback(window, framebufferSizeCallback); // when window resized
-
-    glEnable(GL_DEPTH_TEST); // enable z-axis depth, alpha channel, blending
-
-    // events
-    glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
     glfwSetKeyCallback(window, keyCallback);
+    glfwSetCursorPosCallback(window, mouseCallback);
+    glfwSetScrollCallback(window, scrollCallback);
 
-    // shader config
-    Shader rectShader("./src/shaders/vs_default.glsl", "./src/shaders/fs_default.glsl");
+    glEnable(GL_DEPTH_TEST); // enable z-axis depth (we're working with 3d here!)
+    
+    Shader rectShader("./src/shaders/vs_default.glsl", "./src/shaders/fs_default.glsl"); // init shader
 
-    // float vertices[] = { // vertices of rectangle (x, y, z)
-    //     // vertex coords     // colors          // texture coords
-    //     0.5f,  0.5f, 0.0f,  1.0f, 0.0f, 1.0f,  1.0f, 1.0f, // top right
-    //     0.5f, -0.5f, 0.0f,  0.0f, 1.0f, 0.0f,  2.0f, 0.0f,  // bottom right
-    //    -0.5f, -0.5f, 1.0f,  1.0f, 0.0f, 0.0f,  0.0f, 0.0f, // bottom left
-    //    -0.5f,  0.5f, 0.0f,  1.0f, 1.0f, 0.0f,  0.0f, 1.0f, // top left
-    // };
-    float vertices[] = { // cube vertices
+    float vertices[] = { // basic cube vertices
         // vertex coords     texture coords
         -0.5f, -0.5f, -0.5f,  0.0f, 0.0f,
         0.5f, -0.5f, -0.5f,  1.0f, 0.0f,
@@ -169,9 +183,6 @@ int main() {
     unsigned int modelLoc = glGetUniformLocation(rectShader.ID, "model");
     unsigned int viewLoc = glGetUniformLocation(rectShader.ID, "view");
 
-    glm::mat4 projection = glm::perspective(glm::radians(45.0f), (float)windowWidth / (float)windowHeight, 0.1f, 100.0f);
-    rectShader.setMat4("projection", projection);
-
     while(!glfwWindowShouldClose(window)) { // render loop(each iteration is a frame)
         // update time logic
         float currentFrame = glfwGetTime();
@@ -188,17 +199,13 @@ int main() {
 
         rectShader.use();
 
-        
-
+        glm::mat4 projection = glm::perspective(glm::radians(fov), (float)windowWidth / (float)windowHeight, 0.1f, 100.0f); // update perspective by fov every frame
         glm::mat4 model = glm::mat4(1.0f);
         glm::mat4 view = glm::lookAt(cameraPos, cameraPos + cameraFront, cameraUp);
         model = glm::translate(model, glm::vec3(/*3*glm::cos((float)glfwGetTime())*/0.0f, 0.0f, 0.0f));
         model = glm::rotate(model, glm::sin((float)glfwGetTime()), glm::vec3(1.0f, 0.0f, 0.0f));
-        const float radius = 5.0f;
-        float camX = sin(glfwGetTime()) * radius;
-        float camY = sin(glfwGetTime()) * radius;
-        float camZ = cos(glfwGetTime()) * radius;
         
+        rectShader.setMat4("projection", projection);
         glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
         glUniformMatrix4fv(viewLoc, 1, GL_FALSE, &view[0][0]);
 
@@ -210,9 +217,10 @@ int main() {
         model = glm::translate(model, glm::vec3(0.0f, 1.0f, -1.0f)); // another cube
         glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
         glDrawArrays(GL_TRIANGLES, 0, 36);
+
         // end render
-        inputPoll(window);
-        glfwPollEvents();
+        inputPoll(window); // poll custom continuous events
+        glfwPollEvents(); // poll regular glfw callbacks
         glfwSwapBuffers(window);
     }
 
@@ -232,11 +240,42 @@ void keyCallback(GLFWwindow* window, int key, int scancode, int action, int mods
     if(key == GLFW_KEY_ESCAPE) glfwSetWindowShouldClose(window, true);
 }
 
+void mouseCallback(GLFWwindow* window, double xpos, double ypos) {
+    if(mouseInit) lastPosX = xpos, lastPosY = ypos, mouseInit = false; // set mouse position to center of screen to prevent jump of mouse during init
+    float xOffset = xpos - lastPosX;
+    float yOffset = invertY ? ypos - lastPosY : lastPosY - ypos;
+    lastPosX = xpos, lastPosY = ypos;
+
+    xOffset *= mouseSensitivity;
+    yOffset *= mouseSensitivity; // multiply by sensitivity or else mouse movement will go brrrr
+
+    yaw += xOffset; // rotate around y-axis (left/right) by adding/subtracting deg from yaw
+    pitch += yOffset; // do the same but up/down for pitch
+
+    if(pitch > 89.0f) pitch = 89.0f;
+    if(pitch < -89.0f) pitch = -89.0f;
+
+    // now point camera in a direction
+    glm::vec3 direction;
+    direction.x = cos(glm::radians(yaw)) * cos(glm::radians(pitch));
+    direction.y = sin(glm::radians(pitch));
+    direction.z = sin(glm::radians(yaw)) * cos(glm::radians(pitch));
+    cameraFront = glm::normalize(direction); // finally apply direction to adjust camera view
+}
+
+void scrollCallback(GLFWwindow* window, double xoffset, double yoffset) {
+    fov -= (float)yoffset;
+    if(fov < minfov) fov = minfov;
+    if(fov > maxfov) fov = maxfov;
+}
+
+// events that need to be run at every frame refresh at a constant rate
 void inputPoll(GLFWwindow* window) {
-    float camSpeed = 5.0f * deltaTime;
+    camSpeed = movementSpeed * deltaTime;
 
     if(glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS) cameraPos += cameraFront * camSpeed;
     if(glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS) cameraPos -= cameraFront * camSpeed;
     if(glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS) cameraPos -= glm::normalize(glm::cross(cameraFront, cameraUp)) * camSpeed;
     if(glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS) cameraPos += glm::normalize(glm::cross(cameraFront, cameraUp)) * camSpeed;
 }
+
