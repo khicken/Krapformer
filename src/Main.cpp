@@ -6,6 +6,12 @@ void framebufferSizeCallback(GLFWwindow* window, int width, int height);
 void keyCallback(GLFWwindow* window, int key, int scancode, int action, int mods);
 
 const unsigned int windowWidth = 1280, windowHeight = 720;
+float deltaTime = 0.0f;
+float lastTime = 0.0f;
+
+glm::vec3 cameraFront = glm::vec3(0.0f, 0.0f, -1.0f);
+glm::vec3 cameraPos = glm::vec3(0.0f, 0.0f, 5.0f);
+glm::vec3 cameraUp = glm::vec3(0.0f, 1.0f, 0.0f);
 
 // todo: add listeners and break apart file into multiple, preferably hpp files? not sure if good practice.
 
@@ -154,17 +160,23 @@ int main() {
     glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 
     // camera
-    glm::vec3 cameraPos = glm::vec3(0.0f, 0.0f, 5.0f);
-    glm::vec3 cameraTarget = glm::vec3(0.0f, 0.0f, 0.0f);
-    glm::vec3 cameraDirection = glm::normalize(cameraPos - cameraTarget); // subtract camera position with target vectors to result in a unit vector of the direction
-    glm::vec3 up = glm::vec3(0.0f, 1.0f, 0.0f);
-    glm::vec3 cameraRight = glm::normalize(glm::cross(up, cameraDirection));
-    glm::vec3 cameraUp = glm::cross(cameraDirection, cameraRight);
+    // glm::vec3 cameraTarget = glm::vec3(0.0f, 0.0f, 0.0f);
+
+    // glm::vec3 cameraDirection = glm::normalize(cameraPos - cameraTarget); // subtract camera position with target vectors to result in a unit vector of the direction
+    // glm::vec3 cameraRight = glm::normalize(glm::cross(up, cameraDirection));
+
+    unsigned int modelLoc = glGetUniformLocation(rectShader.ID, "model");
+    unsigned int viewLoc = glGetUniformLocation(rectShader.ID, "view");
 
     glm::mat4 projection = glm::perspective(glm::radians(45.0f), (float)windowWidth / (float)windowHeight, 0.1f, 100.0f);
     rectShader.setMat4("projection", projection);
 
     while(!glfwWindowShouldClose(window)) { // render loop(each iteration is a frame)
+        // update time logic
+        float currentFrame = glfwGetTime();
+        deltaTime = currentFrame - lastTime;
+        lastTime = currentFrame;
+
         // refresh frame
         glClearColor(0.9f, 1.0f, 0.9f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -175,19 +187,16 @@ int main() {
 
         rectShader.use();
 
-        unsigned int modelLoc = glGetUniformLocation(rectShader.ID, "model");
-        unsigned int viewLoc = glGetUniformLocation(rectShader.ID, "view");
+        
 
         glm::mat4 model = glm::mat4(1.0f);
-        glm::mat4 view = glm::mat4(1.0f);
-        // model = glm::rotate(model, 5*glm::sin((float)glfwGetTime()), glm::vec3(1.0f, 1.0f, 1.0f));
+        glm::mat4 view = glm::lookAt(cameraPos, cameraPos + cameraFront, cameraUp);
         model = glm::translate(model, glm::vec3(/*3*glm::cos((float)glfwGetTime())*/0.0f, 0.0f, 0.0f));
-                const float radius = 5.0f;
+        model = glm::rotate(model, glm::sin((float)glfwGetTime()), glm::vec3(1.0f, 0.0f, 0.0f));
+        const float radius = 5.0f;
         float camX = sin(glfwGetTime()) * radius;
         float camY = sin(glfwGetTime()) * radius;
         float camZ = cos(glfwGetTime()) * radius;
-        view = glm::lookAt(glm::vec3(camX, 0.0f, camZ), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 1.0f, 0.0f));
-
         
         glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
         glUniformMatrix4fv(viewLoc, 1, GL_FALSE, &view[0][0]);
@@ -197,9 +206,7 @@ int main() {
         // draw
         glBindVertexArray(VAO); // repeatedly bind vao for triangle
         glDrawArrays(GL_TRIANGLES, 0, 36);
-        model = glm::translate(model, glm::vec3(/*3*glm::sin((float)glfwGetTime())*/0.0f, 1.0f, -1.0f)); // another cube
-        // glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
-        // rectShader.setMat4("projection", projection);
+        model = glm::translate(model, glm::vec3(0.0f, 1.0f, -1.0f)); // another cube
         glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
         glDrawArrays(GL_TRIANGLES, 0, 36);
         // end render
@@ -220,5 +227,10 @@ void framebufferSizeCallback(GLFWwindow* window, int width, int height) { // cal
 }
 
 void keyCallback(GLFWwindow* window, int key, int scancode, int action, int mods) {
+    float camSpeed = 50.0f * deltaTime;
     if(key == GLFW_KEY_ESCAPE) glfwSetWindowShouldClose(window, true);
+    if(glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS) cameraPos += cameraFront * camSpeed;
+    if(glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS) cameraPos -= cameraFront * camSpeed;
+    if(glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS) cameraPos -= glm::normalize(glm::cross(cameraFront, cameraUp)) * camSpeed;
+    if(glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS) cameraPos += glm::normalize(glm::cross(cameraFront, cameraUp)) * camSpeed;
 }
