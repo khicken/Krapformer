@@ -48,7 +48,7 @@ int main() {
     glfwSetKeyCallback(window, keyCallback);
 
     // shader config
-    Shader rectShader("C:\\Users\\kaleb\\Desktop\\3d\\src\\shaders\\vs_default.glsl", "C:\\Users\\kaleb\\Desktop\\3d\\src\\shaders\\fs_default.glsl");
+    Shader rectShader("./src/shaders/vs_default.glsl", "./src/shaders/fs_default.glsl");
 
     // float vertices[] = { // vertices of rectangle (x, y, z)
     //     // vertex coords     // colors          // texture coords
@@ -140,7 +140,7 @@ int main() {
     // load image, create texture and generate mipmaps
     int width, height, nrChannels;
     stbi_set_flip_vertically_on_load(true);
-    unsigned char *data = stbi_load("C:/Users/kaleb/Desktop/3d/src/assets/new.jpg", &width, &height, &nrChannels, 0);
+    unsigned char *data = stbi_load("./src/assets/new.jpg", &width, &height, &nrChannels, 0);
     glPixelStorei(GL_UNPACK_ALIGNMENT, 1); // just in case if width and height return segmentation fault
     glPixelStorei(GL_UNPACK_ROW_LENGTH, 0);
     glPixelStorei(GL_UNPACK_SKIP_PIXELS, 0);
