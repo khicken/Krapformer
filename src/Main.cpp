@@ -4,6 +4,7 @@
 
 void framebufferSizeCallback(GLFWwindow* window, int width, int height);
 void keyCallback(GLFWwindow* window, int key, int scancode, int action, int mods);
+void inputPoll(GLFWwindow* window);
 
 const unsigned int windowWidth = 1280, windowHeight = 720;
 float deltaTime = 0.0f;
@@ -210,6 +211,7 @@ int main() {
         glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
         glDrawArrays(GL_TRIANGLES, 0, 36);
         // end render
+        inputPoll(window);
         glfwPollEvents();
         glfwSwapBuffers(window);
     }
@@ -227,8 +229,12 @@ void framebufferSizeCallback(GLFWwindow* window, int width, int height) { // cal
 }
 
 void keyCallback(GLFWwindow* window, int key, int scancode, int action, int mods) {
-    float camSpeed = 50.0f * deltaTime;
     if(key == GLFW_KEY_ESCAPE) glfwSetWindowShouldClose(window, true);
+}
+
+void inputPoll(GLFWwindow* window) {
+    float camSpeed = 5.0f * deltaTime;
+
     if(glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS) cameraPos += cameraFront * camSpeed;
     if(glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS) cameraPos -= cameraFront * camSpeed;
     if(glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS) cameraPos -= glm::normalize(glm::cross(cameraFront, cameraUp)) * camSpeed;
