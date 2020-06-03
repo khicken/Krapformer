@@ -20,3 +20,4 @@
 #include <sstream>
 
 #include "Shader.h"
+#include "Camera.h"

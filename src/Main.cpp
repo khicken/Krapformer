@@ -6,27 +6,13 @@ void framebufferSizeCallback(GLFWwindow* window, int width, int height);
 void keyCallback(GLFWwindow* window, int key, int scancode, int action, int mods);
 void mouseCallback(GLFWwindow* window, double xpos, double ypos);
 void scrollCallback(GLFWwindow* window, double xoffset, double yoffset);
-void inputPoll(GLFWwindow* window);
+void pollExtraEvents(GLFWwindow* window);
 
-// window dimensions
-const unsigned int windowWidth = 1280, windowHeight = 720;
+// window
+unsigned int windowWidth = 1280, windowHeight = 720;
 
-// mouse
-bool mouseInit = true; // if mouse not inside winodw
-float lastPosX = windowWidth/2, lastPosY = windowHeight/2;
-float pitch = 0.0f, yaw = -90.0f; // roll not needed as pitch up/down, yaw left/right, (if 0.0 would point right cause positive x-axis points right, so -90 deg rot) roll rotates camera around z-axis
-
-// customizable mouse stuff
-float movementSpeed = 5.0f, camSpeed = movementSpeed;
-float mouseSensitivity = 0.1f;
-float fov = 45.0f;
-float minfov = 1.0f, maxfov = 45.0f;
-bool invertY = false; // invert y-movement idk why
-
-// camera
-glm::vec3 cameraPos = glm::vec3(0.0f, 0.0f, 5.0f);
-glm::vec3 cameraFront = glm::vec3(0.0f, 0.0f, -1.0f);
-glm::vec3 cameraUp = glm::vec3(0.0f, 1.0f, 0.0f);
+// init objects
+Camera camera(glm::vec3(0.0f, 0.0f, 5.0f));
 
 // time variables to keep program consistent based off of time, not frames
 float deltaTime = 0.0f;
@@ -54,6 +40,8 @@ int main() {
     glewInit();
     glewExperimental = true;
 
+    Shader rectShader("./src/shaders/vs_default.glsl", "./src/shaders/fs_default.glsl");
+
     // fetch monitor stats
     const GLFWvidmode* mode = glfwGetVideoMode(glfwGetPrimaryMonitor());
     int monitorWidth = mode->width, monitorHeight = mode->height;
@@ -63,6 +51,7 @@ int main() {
     glfwSetWindowPos(window, monitorWidth/2 - windowWidth/2, monitorHeight/2 - windowHeight/2);
 
     glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+    glfwSetCursorPos(window, camera.lastPosX, camera.lastPosY);
     glfwSetFramebufferSizeCallback(window, framebufferSizeCallback); // when window resized
     glfwSetKeyCallback(window, keyCallback);
     glfwSetCursorPosCallback(window, mouseCallback);
@@ -70,7 +59,6 @@ int main() {
 
     glEnable(GL_DEPTH_TEST); // enable z-axis depth (we're working with 3d here!)
     
-    Shader rectShader("./src/shaders/vs_default.glsl", "./src/shaders/fs_default.glsl"); // init shader
 
     float vertices[] = { // basic cube vertices
         // vertex coords     texture coords
@@ -199,9 +187,10 @@ int main() {
 
         rectShader.use();
 
-        glm::mat4 projection = glm::perspective(glm::radians(fov), (float)windowWidth / (float)windowHeight, 0.1f, 100.0f); // update perspective by fov every frame
+        glm::mat4 projection = glm::perspective(glm::radians(camera.fov), (float)windowWidth / (float)windowHeight, 0.1f, 100.0f); // update perspective by fov every frame
+        glm::mat4 view = camera.getViewMatrix();
         glm::mat4 model = glm::mat4(1.0f);
-        glm::mat4 view = glm::lookAt(cameraPos, cameraPos + cameraFront, cameraUp);
+        
         model = glm::translate(model, glm::vec3(/*3*glm::cos((float)glfwGetTime())*/0.0f, 0.0f, 0.0f));
         model = glm::rotate(model, glm::sin((float)glfwGetTime()), glm::vec3(1.0f, 0.0f, 0.0f));
         
@@ -219,9 +208,12 @@ int main() {
         glDrawArrays(GL_TRIANGLES, 0, 36);
 
         // end render
-        inputPoll(window); // poll custom continuous events
+        // inputPoll(window); // poll custom continuous events
+        pollExtraEvents(window); // need to poll continuously frame-by-frame
         glfwPollEvents(); // poll regular glfw callbacks
         glfwSwapBuffers(window);
+
+        std::cout << camera.pitch << " , " << camera.yaw << std::endl;
     }
 
     // destroy vao, vbo, then glfw to clear memory
@@ -241,41 +233,17 @@ void keyCallback(GLFWwindow* window, int key, int scancode, int action, int mods
 }
 
 void mouseCallback(GLFWwindow* window, double xpos, double ypos) {
-    if(mouseInit) lastPosX = xpos, lastPosY = ypos, mouseInit = false; // set mouse position to center of screen to prevent jump of mouse during init
-    float xOffset = xpos - lastPosX;
-    float yOffset = invertY ? ypos - lastPosY : lastPosY - ypos;
-    lastPosX = xpos, lastPosY = ypos;
-
-    xOffset *= mouseSensitivity;
-    yOffset *= mouseSensitivity; // multiply by sensitivity or else mouse movement will go brrrr
-
-    yaw += xOffset; // rotate around y-axis (left/right) by adding/subtracting deg from yaw
-    pitch += yOffset; // do the same but up/down for pitch
-
-    if(pitch > 89.0f) pitch = 89.0f;
-    if(pitch < -89.0f) pitch = -89.0f;
-
-    // now point camera in a direction
-    glm::vec3 direction;
-    direction.x = cos(glm::radians(yaw)) * cos(glm::radians(pitch));
-    direction.y = sin(glm::radians(pitch));
-    direction.z = sin(glm::radians(yaw)) * cos(glm::radians(pitch));
-    cameraFront = glm::normalize(direction); // finally apply direction to adjust camera view
+    camera.mouseEvent((float)xpos, (float)ypos);
 }
 
 void scrollCallback(GLFWwindow* window, double xoffset, double yoffset) {
-    fov -= (float)yoffset;
-    if(fov < minfov) fov = minfov;
-    if(fov > maxfov) fov = maxfov;
+    camera.scrollEvent(yoffset);
 }
 
 // events that need to be run at every frame refresh at a constant rate
-void inputPoll(GLFWwindow* window) {
-    camSpeed = movementSpeed * deltaTime;
-
-    if(glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS) cameraPos += cameraFront * camSpeed;
-    if(glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS) cameraPos -= cameraFront * camSpeed;
-    if(glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS) cameraPos -= glm::normalize(glm::cross(cameraFront, cameraUp)) * camSpeed;
-    if(glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS) cameraPos += glm::normalize(glm::cross(cameraFront, cameraUp)) * camSpeed;
+void pollExtraEvents(GLFWwindow* window) {
+    if(glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS) camera.keyEvent(FORWARD);
+    if(glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS) camera.keyEvent(BACKWARD);
+    if(glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS) camera.keyEvent(LEFT);
+    if(glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS) camera.keyEvent(RIGHT);
 }
-
