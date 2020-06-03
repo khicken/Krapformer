@@ -12,7 +12,7 @@ void pollExtraEvents(GLFWwindow* window);
 unsigned int windowWidth = 1280, windowHeight = 720;
 
 // init objects
-Camera camera(glm::vec3(0.0f, 0.0f, 5.0f));
+Camera camera(glm::vec3(0.0f, 0.0f, 3.0f));
 
 // time variables to keep program consistent based off of time, not frames
 float deltaTime = 0.0f;
