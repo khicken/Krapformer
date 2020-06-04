@@ -18,6 +18,8 @@
 #include <string>
 #include <fstream>
 #include <sstream>
+#include <array>
+#include <vector>
 
 #include "Shader.h"
 #include "Camera.h"

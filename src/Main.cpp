@@ -104,9 +104,21 @@ int main() {
         -0.5f,  0.5f,  0.5f,  0.0f, 0.0f,
         -0.5f,  0.5f, -0.5f,  0.0f, 1.0f
     };
+    glm::vec3 cubePositions[] = { // cube positions
+        glm::vec3( 0.0f,  0.0f,  0.0f),
+        glm::vec3( 2.0f,  5.0f, -15.0f),
+        glm::vec3(-1.5f, -2.2f, -2.5f),
+        glm::vec3(-3.8f, -2.0f, -12.3f),
+        glm::vec3( 2.4f, -0.4f, -3.5f),
+        glm::vec3(-1.7f,  3.0f, -7.5f),
+        glm::vec3( 1.3f, -2.0f, -2.5f),
+        glm::vec3( 1.5f,  2.0f, -2.5f),
+        glm::vec3( 1.5f,  0.2f, -1.5f),
+        glm::vec3(-1.3f,  1.0f, -1.5f)
+    };
 
     // create and load buffer and array objects to shade
-    unsigned int VBO, VAO, EBO;
+    unsigned int VBO, VAO;
     glGenVertexArrays(1, &VAO); // only generating 1 VAO
     glGenBuffers(1, &VBO); // generate 1 VBO
     // glGenBuffers(1, &EBO); // generate 1 EBO
@@ -168,9 +180,6 @@ int main() {
     // glm::vec3 cameraDirection = glm::normalize(cameraPos - cameraTarget); // subtract camera position with target vectors to result in a unit vector of the direction
     // glm::vec3 cameraRight = glm::normalize(glm::cross(up, cameraDirection));
 
-    unsigned int modelLoc = glGetUniformLocation(rectShader.ID, "model");
-    unsigned int viewLoc = glGetUniformLocation(rectShader.ID, "view");
-
     while(!glfwWindowShouldClose(window)) { // render loop(each iteration is a frame)
         // update time logic
         float currentFrame = glfwGetTime();
@@ -178,48 +187,41 @@ int main() {
         lastTime = currentFrame;
 
         // refresh frame
+        pollExtraEvents(window); // need to poll continuously frame-by-frame
         glClearColor(0.9f, 1.0f, 0.9f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
         // render things in between
         glActiveTexture(GL_TEXTURE0);
         glBindTexture(GL_TEXTURE_2D, texture1);
-
+        
         rectShader.use();
 
         glm::mat4 projection = glm::perspective(glm::radians(camera.fov), (float)windowWidth / (float)windowHeight, 0.1f, 100.0f); // update perspective by fov every frame
+        rectShader.setMat4("projection", projection);
+
         glm::mat4 view = camera.getViewMatrix();
+        rectShader.setMat4("view", view);
+
+        glBindVertexArray(VAO); // repeatedly bind vao for triangle
         glm::mat4 model = glm::mat4(1.0f);
         
-        model = glm::translate(model, glm::vec3(/*3*glm::cos((float)glfwGetTime())*/0.0f, 0.0f, 0.0f));
-        model = glm::rotate(model, glm::sin((float)glfwGetTime()), glm::vec3(1.0f, 0.0f, 0.0f));
-        
-        rectShader.setMat4("projection", projection);
-        glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
-        glUniformMatrix4fv(viewLoc, 1, GL_FALSE, &view[0][0]);
-
-        // glUniformMatrix4fv(glGetUniformLocation(rectShader.ID, "transform"), 1, GL_FALSE, glm::value_ptr(transform));
-
-        // draw
-        glBindVertexArray(VAO); // repeatedly bind vao for triangle
-        glDrawArrays(GL_TRIANGLES, 0, 36);
-        model = glm::translate(model, glm::vec3(0.0f, 1.0f, -1.0f)); // another cube
-        glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
-        glDrawArrays(GL_TRIANGLES, 0, 36);
+        for(int i = 0; i < sizeof(cubePositions)/sizeof(cubePositions[0]); i++) {
+            model = glm::translate(model, cubePositions[i]);
+            model = glm::rotate(model, glm::sin((float)glfwGetTime()), glm::vec3(1.0f, 0.0f, 0.0f));
+            rectShader.setMat4("model", model);
+            glDrawArrays(GL_TRIANGLES, 0, 36);
+        } // draw cubes from cube pos array
 
         // end render
-        // inputPoll(window); // poll custom continuous events
-        pollExtraEvents(window); // need to poll continuously frame-by-frame
-        glfwPollEvents(); // poll regular glfw callbacks
         glfwSwapBuffers(window);
-
-        std::cout << camera.pitch << " , " << camera.yaw << std::endl;
+        glfwPollEvents(); // poll regular glfw callbacks
     }
 
     // destroy vao, vbo, then glfw to clear memory
     glDeleteVertexArrays(1, &VAO);
     glDeleteBuffers(1, &VBO);
-    glDeleteBuffers(1, &EBO);
+    // glDeleteBuffers(1, &EBO);
     glfwTerminate();
     return 0;
 }
@@ -242,8 +244,8 @@ void scrollCallback(GLFWwindow* window, double xoffset, double yoffset) {
 
 // events that need to be run at every frame refresh at a constant rate
 void pollExtraEvents(GLFWwindow* window) {
-    if(glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS) camera.keyEvent(FORWARD);
-    if(glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS) camera.keyEvent(BACKWARD);
-    if(glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS) camera.keyEvent(LEFT);
-    if(glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS) camera.keyEvent(RIGHT);
+    if(glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS) camera.keyEvent(FORWARD, deltaTime);
+    if(glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS) camera.keyEvent(BACKWARD, deltaTime);
+    if(glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS) camera.keyEvent(LEFT, deltaTime);
+    if(glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS) camera.keyEvent(RIGHT, deltaTime);
 }
