@@ -68,12 +68,10 @@ public:
     void keyEvent(Directions dir, float deltaTime) {
         velocity = movementSpeed * deltaTime;
 
-        if(dir == FORWARD)  position += front * velocity;
-        if(dir == BACKWARD) position -= front * velocity;
+        if(dir == FORWARD)  position += front_no_pitch * velocity;
+        if(dir == BACKWARD) position -= front_no_pitch * velocity;
         if(dir == LEFT)     position -= right * velocity;
         if(dir == RIGHT)    position += right * velocity;
-
-        position.y = 0.0f; // keep at ground level
     }
 
     void scrollEvent(double yoffset) {
@@ -88,6 +86,7 @@ public:
         return glm::lookAt(position, position + front, up);
     }
 private:
+    glm::vec3 front_no_pitch;
     void updateCameraVectors() { // need to use on init and every mouse movement
         glm::vec3 direction;
         direction.x = cos(glm::radians(yaw)) * cos(glm::radians(pitch));
@@ -96,6 +95,7 @@ private:
         front = glm::normalize(direction); // apply direction to the camera
         right = glm::normalize(glm::cross(front, worldUp)); // normalize the vectors as their length approaches 0 the more the vectors move
         up    = glm::normalize(glm::cross(right, front));
+        front_no_pitch = glm::vec3(glm::cos(glm::radians(yaw)), 0.0f, glm::sin(glm::radians(yaw)));
     }
 };
 

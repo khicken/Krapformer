@@ -59,7 +59,12 @@ int main() {
 
     glEnable(GL_DEPTH_TEST); // enable z-axis depth (we're working with 3d here!)
     
-
+    float floorVertices[] = {
+        -10.0f, -1.0f, 10.0f, 
+        10.0f, -1.0f, 10.0f,
+        10.0f, -1.0f, -10.0f,
+        -10.0f, -1.0f, -10.0f
+    };
     float vertices[] = { // basic cube vertices
         // vertex coords     texture coords
         -0.5f, -0.5f, -0.5f,  0.0f, 0.0f,
