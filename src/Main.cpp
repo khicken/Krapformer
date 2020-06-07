@@ -11,6 +11,8 @@ void pollExtraEvents(GLFWwindow* window);
 // window
 unsigned int windowWidth = 1280, windowHeight = 720;
 
+bool paused = false;
+
 // object vertices
 float floorVertices[] = {
     -10.0f, -1.0f, 10.0f, 0.0f, 0.0f,
@@ -122,6 +124,11 @@ int main() {
 
     glEnable(GL_DEPTH_TEST); // enable z-axis depth (we're working with 3d here!)
 
+    ImGui::CreateContext();
+    ImGuiIO& io = ImGui::GetIO(); (void)io;
+    ImGui_ImplGlfwGL3_Init(window, true);
+    ImGui::StyleColorsDark();
+
     cube.init();
 
     rectShader.use();
@@ -138,15 +145,21 @@ int main() {
         lastTime = currentFrame;
 
         // refresh frame
+        ImGui_ImplGlfwGL3_NewFrame();
         pollExtraEvents(window); // need to poll continuously frame-by-frame
         glClearColor(0.9f, 1.0f, 0.9f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-        // render things in between
-        cube.bind();
+        if(paused) {
+            glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
+        } else {
+            glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+        }
+
+        ImGui::Text("hi");
         
         rectShader.use();
-
+cube.bind();
         glm::mat4 projection = glm::perspective(glm::radians(camera.fov), (float)windowWidth / (float)windowHeight, 0.1f, 100.0f); // update perspective by fov every frame
         rectShader.setMat4("projection", projection);
 
@@ -164,11 +177,14 @@ int main() {
         } // draw cubes from cube pos array
 
         // end render
+        ImGui::Render();
+        ImGui_ImplGlfwGL3_RenderDrawData(ImGui::GetDrawData());
         glfwSwapBuffers(window);
         glfwPollEvents(); // poll regular glfw callbacks
     }
 
     cube.destroy();
+    ImGui_ImplGlfwGL3_Shutdown();
     glfwTerminate();
     return 0;
 }
@@ -178,7 +194,7 @@ void framebufferSizeCallback(GLFWwindow* window, int width, int height) { // cal
 }
 
 void keyCallback(GLFWwindow* window, int key, int scancode, int action, int mods) {
-    if(key == GLFW_KEY_ESCAPE) glfwSetWindowShouldClose(window, true);
+    if(key == GLFW_KEY_ESCAPE) paused = paused ? false : true; // glfwSetWindowShouldClose(window, true);
 }
 
 void mouseCallback(GLFWwindow* window, double xpos, double ypos) {

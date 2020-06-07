@@ -8,6 +8,7 @@
             "args": [
                 "-g",
                 "${file}",
+                "${fileDirname}\\..\\imgui\\*.cpp",
                 "-o",
                 "${fileDirname}\\${fileBasenameNoExtension}.exe",
                 // "-L${fileDirname}\\..\\glfw\\lib",
