@@ -10,10 +10,9 @@
                 "${file}",
                 "-o",
                 "${fileDirname}\\${fileBasenameNoExtension}.exe",
-                "-L",
-                "${fileDirname}\\..\\soil2\\lib",
+                // "-L${fileDirname}\\..\\glfw\\lib",
                 "-lglfw3",
-                 "-lglew32",
+                "-lglew32",
                 "-lopengl32",
                 "-lgdi32",
                 "-lsoil2"

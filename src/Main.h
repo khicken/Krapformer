@@ -19,16 +19,19 @@ const int OS = 2;
 
 #define GLEW_STATIC
 #include "../glew-2.1.0/include/GL/glew.h"
-#include "../glfw-3.3.2/include/GLFW/glfw3.h"
+#include "../glfw/include/GLFW/glfw3.h"
 
 // transformations with matrices and all that stuff
-#include "../glm-0.9.9.8/glm/glm/glm.hpp"
-#include "../glm-0.9.9.8/glm/glm/gtc/matrix_transform.hpp"
-#include "../glm-0.9.9.8/glm/glm/gtc/type_ptr.hpp"
+#include "../glm/glm/glm.hpp"
+#include "../glm/glm/gtc/matrix_transform.hpp"
+#include "../glm/glm/gtc/type_ptr.hpp"
 
 // #include "../soil2/include/SOIL2.h"
 #define STB_IMAGE_IMPLEMENTATION
 #include "../stb/stb_image.h"
+
+#include "../imgui/imgui_impl_glfw_gl3.h"
+#include "../imgui/imgui.h"
 
 #include "Object.h"
 #include "Shader.h"
