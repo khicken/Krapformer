@@ -27,12 +27,11 @@ class Camera {
 public:
     glm::vec3 position, front, up, right, worldUp;
     float yaw, pitch, movementSpeed, mouseSensitivity, fov;
-    bool invertY;
     float velocity; // will be acted upon later
     float lastPosX, lastPosY;
 
     Camera(glm::vec3 pos = glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3 u = glm::vec3(0.0f, 1.0f, 0.0f), float y = d_yaw, float p = d_pitch) :
-        front(glm::vec3(0.0f, 0.0f, -1.0f)), invertY(g_invertY), movementSpeed(g_movementSpeed), mouseSensitivity(0.1f), fov(g_fov), lastPosX(windowWidth/2), lastPosY(windowHeight/2) {
+        front(glm::vec3(0.0f, 0.0f, -1.0f)), movementSpeed(g_movementSpeed), mouseSensitivity(0.1f), fov(g_fov), lastPosX(windowWidth/2), lastPosY(windowHeight/2) {
         position = pos;
         worldUp = u;
         yaw = y;
@@ -41,7 +40,7 @@ public:
     }
 
     Camera(float posX, float posY, float posZ, float upX, float upY, float upZ, float y, float p) : 
-        front(glm::vec3(0.0f, 0.0f, -1.0f)), invertY(g_invertY), movementSpeed(g_movementSpeed), mouseSensitivity(0.1f), fov(g_fov), lastPosX(windowWidth/2), lastPosY(windowHeight/2) {
+        front(glm::vec3(0.0f, 0.0f, -1.0f)), movementSpeed(g_movementSpeed), mouseSensitivity(0.1f), fov(g_fov) {
         position = glm::vec3(posX, posY, posZ);
         worldUp = glm::vec3(upX, upY, upZ);
         yaw = y;
@@ -51,7 +50,7 @@ public:
 
     void mouseEvent(double xpos, double ypos) {
         float xOffset = xpos - lastPosX;
-        float yOffset = invertY ? ypos - lastPosY : lastPosY - ypos;
+        float yOffset = g_invertY ? ypos - lastPosY : lastPosY - ypos;
         lastPosX = xpos, lastPosY = ypos;
 
         xOffset *= mouseSensitivity;
