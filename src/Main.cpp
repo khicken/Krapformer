@@ -127,12 +127,12 @@ int main() {
     ImGui::CreateContext();
     ImGuiIO& io = ImGui::GetIO(); (void)io;
     ImGui_ImplGlfwGL3_Init(window, true);
-    ImGui::StyleColorsDark();
+    ImGui::StyleColorsClassic();
 
     cube.init();
 
     rectShader.use();
-    rectShader.setInt("texture1", 0);
+    rectShader.setInt("texture", 0);
 
     glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 
@@ -156,7 +156,7 @@ int main() {
             glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
         }
 
-        ImGui::Text("hi");
+        ImGui::Text("huh");
         
         rectShader.use();
 cube.bind();
