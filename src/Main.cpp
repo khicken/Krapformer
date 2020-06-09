@@ -2,6 +2,15 @@
 
 #include "Main.h"
 
+// TODO: MODIFY OBJECT FILE
+
+enum GameState {
+    GAME_INGAME,
+    GAME_TITLE,
+    GAME_PAUSED,
+    GAME_OPTIONS
+};
+
 void framebufferSizeCallback(GLFWwindow* window, int width, int height);
 void keyCallback(GLFWwindow* window, int key, int scancode, int action, int mods);
 void mouseCallback(GLFWwindow* window, double xpos, double ypos);

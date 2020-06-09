@@ -24,13 +24,13 @@ public:
         model = glm::rotate(model, glm::radians(rotate), glm::vec3(0.0f, 0.0f, 1.0f)); // then rotate
         model = glm::translate(model, glm::vec3(-0.5f * size.x, -0.5f * size.y, 0.0f)); // move origin back
 
-        this->shader.SetMatrix4("model", model);
+        this->shader.setMat4("model", model);
 
         // render textured quad
-        this->shader.SetVector3f("spriteColor", color);
+        this->shader.setVec3("spriteColor", color);
 
         glActiveTexture(GL_TEXTURE0);
-        texture.Bind();
+        texture.bind();
 
         glBindVertexArray(this->quadVAO);
         glDrawArrays(GL_TRIANGLES, 0, 6);
