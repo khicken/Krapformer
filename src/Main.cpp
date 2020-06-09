@@ -114,7 +114,8 @@ int main() {
     glewInit();
     glewExperimental = true;
 
-    Shader rectShader("./src/shaders/vs_default.glsl", "./src/shaders/fs_default.glsl");
+    Shader rectShader();
+    rectShader.compile();
 
     // fetch monitor stats
     const GLFWvidmode* mode = glfwGetVideoMode(glfwGetPrimaryMonitor());
@@ -175,7 +176,6 @@ cube.bind();
         glm::mat4 view = camera.getViewMatrix();
         rectShader.setMat4("view", view);
 
-        
         glm::mat4 model = glm::mat4(1.0f);
         
         for(int i = 0; i < sizeof(cubePositions)/sizeof(cubePositions[0]); i++) {
