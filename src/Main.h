@@ -5,6 +5,7 @@
 #include <string>
 #include <fstream>
 #include <sstream>
+#include <map>
 
 // os 0 for windows, 1 for mac, 2 for linux
 #if defined(__WIN32) || defined(_WIN64)
@@ -38,3 +39,5 @@ const int OS = 2;
 #include "Texture2D.h"
 #include "Sprite2D.h"
 #include "Camera.h"
+#include "ResourceManager.h"
+#include "Game.h"

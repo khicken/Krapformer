@@ -2,8 +2,6 @@
 
 #include "Main.h"
 
-// TODO: MODIFY OBJECT FILE
-
 enum GameState {
     GAME_INGAME,
     GAME_TITLE,
@@ -114,8 +112,8 @@ int main() {
     glewInit();
     glewExperimental = true;
 
-    Shader rectShader();
-    rectShader.compile();
+    // Shader rectShader();
+    // rectShader.compile();
 
     // fetch monitor stats
     const GLFWvidmode* mode = glfwGetVideoMode(glfwGetPrimaryMonitor());
@@ -139,10 +137,10 @@ int main() {
     ImGui_ImplGlfwGL3_Init(window, true);
     ImGui::StyleColorsClassic();
 
-    cube.init();
+    // cube.init();
 
-    rectShader.use();
-    rectShader.setInt("texture", 0);
+    // rectShader.use();
+    // rectShader.setInt("texture", 0);
 
     glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 
