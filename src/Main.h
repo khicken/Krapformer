@@ -31,13 +31,13 @@ const int OS = 2;
 #define STB_IMAGE_IMPLEMENTATION
 #include "../stb/stb_image.h"
 
-#include "../imgui/imgui_impl_glfw_gl3.h"
-#include "../imgui/imgui.h"
+// #include "../imgui/imgui_impl_glfw_gl3.h"
+// #include "../imgui/imgui.h"
 
-#include "Object.h"
 #include "Shader.h"
 #include "Texture.h"
 #include "Sprite2D.h"
+#include "Sprite3D.h"
 #include "Camera.h"
 #include "ResourceManager.h"
 #include "Engine.h"

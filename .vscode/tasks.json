@@ -8,15 +8,15 @@
             "args": [
                 "-g",
                 "${file}",
-                "${fileDirname}\\..\\imgui\\*.cpp",
+                "${fileDirname}\\*.cpp",
                 "-o",
                 "${fileDirname}\\${fileBasenameNoExtension}.exe",
                 // "-L${fileDirname}\\..\\glfw\\lib",
                 "-lglfw3",
                 "-lglew32",
                 "-lopengl32",
-                "-lgdi32",
-                "-lsoil2"
+                "-lgdi32"
+                // "-lsoil2"
             ],
             "options": {
                 "cwd": "C:\\mingw64\\bin"
