@@ -36,8 +36,8 @@ const int OS = 2;
 
 #include "Object.h"
 #include "Shader.h"
-#include "Texture2D.h"
+#include "Texture.h"
 #include "Sprite2D.h"
 #include "Camera.h"
 #include "ResourceManager.h"
-#include "Game.h"
+#include "Engine.h"

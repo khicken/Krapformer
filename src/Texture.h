@@ -3,7 +3,7 @@
 
 #include "Main.h"
 
-class Texture2D {
+class Texture {
 public:
     unsigned int ID;
     // texture image dimensions
@@ -16,7 +16,7 @@ public:
     unsigned int Wrap_T; // wrapping mode on T axis
     unsigned int Filter_Min; // filtering mode if texture pixels < screen pixels
     unsigned int Filter_Max; // filtering mode if texture pixels > screen pixels
-    Texture2D() : Width(0), Height(0), Internal_Format(GL_RGB), Image_Format(GL_RGB), Wrap_S(GL_REPEAT), Wrap_T(GL_REPEAT), Filter_Min(GL_LINEAR), Filter_Max(GL_LINEAR) {
+    Texture() : Width(0), Height(0), Internal_Format(GL_RGB), Image_Format(GL_RGB), Wrap_S(GL_REPEAT), Wrap_T(GL_REPEAT), Filter_Min(GL_LINEAR), Filter_Max(GL_LINEAR) {
         glGenTextures(1, &this->ID);
     }
 

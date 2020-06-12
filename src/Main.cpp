@@ -1,24 +1,22 @@
-// g++ Main.cpp -o run -lglfw3 -lopengl32 -lglu32  -lgdi32 -lglew32 -lfreeglut -lsoil2
+/*
+ * The random 3D FPS by Kaleb (khicken)
+ *    Developed by a future sophomore in high school.
+ * 
+ * View commits and changes on the Github repo: https://github.com/khicken/3d
+ * 
+ * Started with basic OpenGL in C++ the summer of 2019, but started learning core OpenGL in April of 2020.
+ * 
+ * Latest change: 6/11/20
+ * 
+*/
 
 #include "Main.h"
-
-enum GameState {
-    GAME_INGAME,
-    GAME_TITLE,
-    GAME_PAUSED,
-    GAME_OPTIONS
-};
 
 void framebufferSizeCallback(GLFWwindow* window, int width, int height);
 void keyCallback(GLFWwindow* window, int key, int scancode, int action, int mods);
 void mouseCallback(GLFWwindow* window, double xpos, double ypos);
 void scrollCallback(GLFWwindow* window, double xoffset, double yoffset);
 void pollExtraEvents(GLFWwindow* window);
-
-// window
-unsigned int windowWidth = 1280, windowHeight = 720;
-
-bool paused = false;
 
 // object vertices
 float floorVertices[] = {
@@ -84,9 +82,7 @@ glm::vec3 cubePositions[] = { // cube positions
         glm::vec3(-1.3f,  1.0f, -1.5f)
     };
 
-// init objects
-Camera camera(glm::vec3(0.0f, 0.0f, 3.0f));
-Object cube(vertices, "./src/assets/new.jpg");
+Engine game(1280, 720);
 
 // time variables to keep program consistent based off of time, not frames
 float deltaTime = 0.0f;
