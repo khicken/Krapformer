@@ -1,24 +1,24 @@
 #include "ResourceManager.h"
 
 std::map<std::string, Shader> ResourceManager::shaders;
-std::map<std::string, Texture2D> ResourceManager::textures2D;
+std::map<std::string, Texture> ResourceManager::textures;
 
 Shader ResourceManager::loadShader(const char *vShaderFile, const char *fShaderFile, const char *gShaderFile, std::string name) {
     shaders[name] = loadShaderFromFile(vShaderFile, fShaderFile, gShaderFile);
     return shaders[name];
 }
 
-Texture2D ResourceManager::loadTexture2D(const char *file, bool alpha, std::string name) {
-    textures2D[name] = loadTexture2DFromFile(file, alpha);
-    return textures2D[name];
+Texture ResourceManager::loadTexture(const char *file, bool alpha, std::string name) {
+    textures[name] = loadTextureFromFile(file, alpha);
+    return textures[name];
 }
 
 Shader ResourceManager::getShader(std::string name) { return shaders[name]; }
-Texture2D ResourceManager::getTexture2D(std::string name) { return textures2D[name]; }
+Texture ResourceManager::getTexture(std::string name) { return textures[name]; }
 
 void ResourceManager::flush() {
     for(auto iter : shaders) glDeleteProgram(iter.second.ID);
-    for(auto iter : textures2D) glDeleteTextures(1, &iter.second.ID);
+    for(auto iter : textures) glDeleteTextures(1, &iter.second.ID);
 }
 
 Shader ResourceManager::loadShaderFromFile(const char *vShaderFile, const char *fShaderFile, const char *gShaderFile) {
@@ -53,9 +53,9 @@ Shader ResourceManager::loadShaderFromFile(const char *vShaderFile, const char *
     return shader;
 }
 
-Texture2D ResourceManager::loadTexture2DFromFile(const char *file, bool alpha) {
+Texture ResourceManager::loadTextureFromFile(const char *file, bool alpha) {
     // create texture object
-    Texture2D texture;
+    Texture texture;
     if (alpha) texture.Internal_Format = GL_RGBA, texture.Image_Format = GL_RGBA;
 
     int width, height, nrChannels;

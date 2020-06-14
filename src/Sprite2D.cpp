@@ -9,7 +9,7 @@ Sprite2D::~Sprite2D() {
     glDeleteVertexArrays(1, &this->quadVAO);
 }
 
-void Sprite2D::drawSprite(Texture &texture, glm::vec2 position, glm::vec2 size = glm::vec2(10.0f, 10.0f), float rotate = 0.0f, glm::vec3 color = glm::vec3(1.0f)) {
+void Sprite2D::drawSprite(Texture &texture, glm::vec2 position, glm::vec2 size, float rotate, glm::vec3 color) {
     this->shader.use();
     glm::mat4 model = glm::mat4(1.0f);
     model = glm::translate(model, glm::vec3(position, 0.0f));  // first translate (scale, rotation, then translation)

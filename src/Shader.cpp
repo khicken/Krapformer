@@ -2,8 +2,13 @@
 
 #include "Main.h"
 
+Shader::Shader() {
+
+}
+
 Shader &Shader::use() {
     glUseProgram(this->ID);
+    return *this;
 }
 
 void Shader::compile(const char* vertexPath, const char* fragmentPath, const char* geometryPath) {
@@ -13,20 +18,20 @@ void Shader::compile(const char* vertexPath, const char* fragmentPath, const cha
     vertexS = glCreateShader(GL_VERTEX_SHADER);
     glShaderSource(vertexS, 1, &vertexPath, NULL);
     glCompileShader(vertexS);
-    checkCompileErrors(vertexS, "VERTEX");
+    this->checkCompileErrors(vertexS, "VERTEX");
 
     // compile fragment shader from source
     fragmentS = glCreateShader(GL_FRAGMENT_SHADER);
     glShaderSource(fragmentS, 1, &fragmentPath, NULL);
     glCompileShader(fragmentS);
-    checkCompileErrors(fragmentS, "FRAGMENT");
+    this->checkCompileErrors(fragmentS, "FRAGMENT");
 
     // compile geometry shader from source if passed
     if (geometryPath != nullptr) {
     geometryS = glCreateShader(GL_GEOMETRY_SHADER);
     glShaderSource(geometryS, 1, &geometryPath, NULL);
     glCompileShader(geometryS);
-    checkCompileErrors(geometryS, "GEOMETRY");
+    this->checkCompileErrors(geometryS, "GEOMETRY");
     }
 
     // link and compile program (ID)
@@ -35,7 +40,7 @@ void Shader::compile(const char* vertexPath, const char* fragmentPath, const cha
     glAttachShader(this->ID, fragmentS);
     if(geometryPath != nullptr) glAttachShader(this->ID, geometryS);
     glLinkProgram(this->ID);
-    checkCompileErrors(this->ID, "PROGRAM");
+    this->checkCompileErrors(this->ID, "PROGRAM");
 
     // free memory as shaders already binded to program
     glDeleteShader(vertexS);

@@ -38,6 +38,7 @@ glm::vec3 cubePositions[] = { // cube positions
     };
 
 Engine game(1280, 720);
+extern Camera *camera;
 
 // time variables to keep program consistent based off of time, not frames
 float deltaTime = 0.0f, lastTime = 0.0f;
@@ -74,8 +75,15 @@ int main() {
 
     game.windowInit(window);
 
+    glfwSetFramebufferSizeCallback(window, framebufferSizeCallback); // when window resized
+    glfwSetKeyCallback(window, keyCallback);
+    glfwSetCursorPosCallback(window, mouseCallback);
+    glfwSetScrollCallback(window, scrollCallback);
+
 
     glEnable(GL_DEPTH_TEST); // enable z-axis depth (we're working with 3d here!)
+
+    game.init();
 
     // ImGui::CreateContext();
     // ImGuiIO& io = ImGui::GetIO(); (void)io;
@@ -126,3 +134,24 @@ int main() {
 //     if(glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS) camera.keyEvent(LEFT, deltaTime);
 //     if(glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS) camera.keyEvent(RIGHT, deltaTime);
 // }
+
+
+void framebufferSizeCallback(GLFWwindow* window, int width, int height) { // call when window resized
+    glViewport(0, 0, width, height);
+}
+
+void keyCallback(GLFWwindow* window, int key, int scancode, int action, int mods) {
+    // if(key == GLFW_KEY_ESCAPE) this->state = this->state == GAME_PAUSED : this->state = GAME_INGAME ? this->state = GAME_PAUSED; // switch between paused or ingame
+    if(key >= 0 && key < 1024) {
+        if (action == GLFW_PRESS) game.keys[key] = true;
+        else if(action == GLFW_RELEASE) game.keys[key] = false;
+    }
+}
+
+void mouseCallback(GLFWwindow* window, double xpos, double ypos) {
+    camera->mouseEvent((float)xpos, (float)ypos);
+}
+
+void scrollCallback(GLFWwindow* window, double xoffset, double yoffset) {
+    camera->scrollEvent(yoffset);
+}

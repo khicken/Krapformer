@@ -26,11 +26,6 @@ public:
     void render();
     void pollEvents(float dt);
 private:
-    void framebufferSizeCallback(GLFWwindow* window, int width, int height);
-    void keyCallback(GLFWwindow* window, int key, int scancode, int action, int mods);
-    void mouseCallback(GLFWwindow* window, double xpos, double ypos);
-    void scrollCallback(GLFWwindow* window, double xoffset, double yoffset);
-
 };
 
 #endif

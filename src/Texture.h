@@ -35,7 +35,7 @@ public:
         glBindTexture(GL_TEXTURE_2D, 0);
     }
 
-    void bind() const {
+    void bind() {
         glBindTexture(GL_TEXTURE_2D, this->ID);
     }
 private:

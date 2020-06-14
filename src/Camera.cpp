@@ -59,9 +59,9 @@ glm::mat4 Camera::getViewMatrix() { // view matrix is changed by mouse input, so
 void Camera::updateCameraVectors() {
     // need to use on init and every mouse movement (to update camera, duh)
     glm::vec3 direction;
-    direction.x = cos(glm::radians(this->yaw)) * cos(glm::radians(this->this->pitch));
+    direction.x = cos(glm::radians(this->yaw)) * cos(glm::radians(this->pitch));
     direction.y = sin(glm::radians(this->pitch));
-    direction.z = sin(glm::radians(this->yaw)) * cos(glm::radians(this->this->pitch));
+    direction.z = sin(glm::radians(this->yaw)) * cos(glm::radians(this->pitch));
     this->front = glm::normalize(direction); // apply direction to the camera
     this->right = glm::normalize(glm::cross(this->front, this->worldUp)); // normalize the vectors as their length approaches 0 the more the vectors move
     this->up    = glm::normalize(glm::cross(this->right, this->front));

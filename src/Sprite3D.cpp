@@ -10,7 +10,7 @@ Sprite3D::~Sprite3D() {
 }
 
 
-void Sprite3D::drawSprite(Texture &texture, glm::vec3 position, glm::vec3 size = glm::vec3(10.0f, 10.0f, 10.0f), float rotate = 0.0f, glm::vec3 color = glm::vec3(1.0f)) {
+void Sprite3D::drawSprite(Texture &texture, glm::vec3 position, glm::vec3 size, float rotate, glm::vec3 color) {
     this->shader.use();
     glm::mat4 model = glm::mat4(1.0f);
     model = glm::translate(model, glm::vec3(position));  // first translate (transformations are: scale happens first, then rotation, and then final translation happens; reversed order)

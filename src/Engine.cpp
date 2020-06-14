@@ -22,10 +22,6 @@ void Engine::windowInit(GLFWwindow* window) {
 
     glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
     glfwSetCursorPos(window, camera->lastPosX, camera->lastPosY);
-    glfwSetFramebufferSizeCallback(window, framebufferSizeCallback); // when window resized
-    glfwSetKeyCallback(window, keyCallback);
-    glfwSetCursorPosCallback(window, mouseCallback);
-    glfwSetScrollCallback(window, scrollCallback);
 }
 
 void Engine::init() {
@@ -57,24 +53,4 @@ void Engine::pollEvents(float dt) {
         if(this->keys[GLFW_KEY_A]) camera->keyEvent(LEFT, dt);
         if(this->keys[GLFW_KEY_D]) camera->keyEvent(RIGHT, dt);
     }
-}
-
-void Engine::framebufferSizeCallback(GLFWwindow* window, int width, int height) { // call when window resized
-    glViewport(0, 0, width, height);
-}
-
-void Engine::keyCallback(GLFWwindow* window, int key, int scancode, int action, int mods) {
-    if(key == GLFW_KEY_ESCAPE) this->state = this->state == GAME_PAUSED : this->state = GAME_INGAME ? this->state = GAME_PAUSED; // switch between paused or ingame
-    if(key >= 0 && key < 1024) {
-        if (action == GLFW_PRESS) this->keys[key] = true;
-        else if(action == GLFW_RELEASE) this->keys[key] = false;
-    }
-}
-
-void Engine::mouseCallback(GLFWwindow* window, double xpos, double ypos) {
-    camera->mouseEvent((float)xpos, (float)ypos);
-}
-
-void Engine::scrollCallback(GLFWwindow* window, double xoffset, double yoffset) {
-    camera->scrollEvent(yoffset);
 }
