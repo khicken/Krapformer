@@ -2,7 +2,7 @@
 
 Sprite2D *sprite;
 Sprite3D *cube;
-Camera *camera;
+Camera camera(glm::vec3(0.0f, 3.0f, 0.0f));
 
 Engine::Engine(unsigned int windowwidth, unsigned int windowheight) : TITLE("wat"), state(GAME_INGAME), keys() {
     this->WINDOW_WIDTH = windowwidth;
@@ -12,7 +12,7 @@ Engine::Engine(unsigned int windowwidth, unsigned int windowheight) : TITLE("wat
 Engine::~Engine() {
     delete sprite;
     delete cube;
-    delete camera;
+    // delete camera;
 }
 
 void Engine::windowInit(GLFWwindow* window) {
@@ -38,10 +38,10 @@ void Engine::init() { // load objects and such
 }
 
 void Engine::update() {
-    glm::mat4 projection = glm::perspective(glm::radians(camera->fov), (float)this->WINDOW_WIDTH / (float)this->WINDOW_HEIGHT, 0.1f, 100.0f); // update perspective by fov every frame
+    glm::mat4 projection = glm::perspective(glm::radians(camera.fov), (float)this->WINDOW_WIDTH / (float)this->WINDOW_HEIGHT, 0.1f, 100.0f); // update perspective by fov every frame
     ResourceManager::getShader("3D").setMat4("projection", projection);
 
-    glm::mat4 view = camera->getViewMatrix();
+    glm::mat4 view = camera.getViewMatrix();
     ResourceManager::getShader("3D").setMat4("view", view);
 }
 
@@ -52,17 +52,17 @@ void Engine::render() {
 
 void Engine::pollEvents(float dt) {
     if(this->state == GAME_INGAME) {
-        if(this->keys[GLFW_KEY_W]) camera->keyEvent(FORWARD, dt);
-        if(this->keys[GLFW_KEY_S]) camera->keyEvent(BACKWARD, dt);
-        if(this->keys[GLFW_KEY_A]) camera->keyEvent(LEFT, dt);
-        if(this->keys[GLFW_KEY_D]) camera->keyEvent(RIGHT, dt);
+        if(this->keys[GLFW_KEY_W]) camera.keyEvent(FORWARD, dt);
+        if(this->keys[GLFW_KEY_S]) camera.keyEvent(BACKWARD, dt);
+        if(this->keys[GLFW_KEY_A]) camera.keyEvent(LEFT, dt);
+        if(this->keys[GLFW_KEY_D]) camera.keyEvent(RIGHT, dt);
     }
 }
 
 void Engine::updateMouse(double xpos, double ypos) {
-    camera->mouseEvent((float)xpos, (float)ypos);
+    camera.mouseEvent((float)xpos, (float)ypos);
 }
 
 void Engine::updateScroll(double yoffset) {
-    camera->scrollEvent(yoffset);
+    camera.scrollEvent(yoffset);
 }

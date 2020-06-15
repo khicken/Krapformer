@@ -12,12 +12,24 @@
 
 #include "Main.h"
 
+// default or global camera values (d prefix)
+float d_pitch = 0.0f;
+float d_yaw = -90.0f;
+
+// customizable mouse stuff (global with g prefix)
+float g_movementSpeed = 5.0f;
+float g_mouseSensitivity = 1.0f;
+float g_fov = 45.0f;
+float g_minfov = 1.0f, g_maxfov = 45.0f;
+bool g_invertY = false; // invert y-movement idk why
+
 void framebufferSizeCallback(GLFWwindow* window, int width, int height);
 void keyCallback(GLFWwindow* window, int key, int scancode, int action, int mods);
 void mouseCallback(GLFWwindow* window, double xpos, double ypos);
 void scrollCallback(GLFWwindow* window, double xoffset, double yoffset);
 
-Engine game(1280, 720);
+unsigned int DEFAULT_WINDOW_WIDTH = 1280, DEFAULT_WINDOW_HEIGHT = 720;
+Engine game(DEFAULT_WINDOW_WIDTH, DEFAULT_WINDOW_HEIGHT);
 
 int main() {
     float deltaTime = 0.0f, lastTime = 0.0f;
