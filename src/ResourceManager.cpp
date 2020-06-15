@@ -1,5 +1,8 @@
 #include "ResourceManager.h"
 
+#define STB_IMAGE_IMPLEMENTATION
+#include "../stb/stb_image.h"
+
 std::map<std::string, Shader> ResourceManager::shaders;
 std::map<std::string, Texture> ResourceManager::textures;
 
@@ -17,8 +20,8 @@ Shader ResourceManager::getShader(std::string name) { return shaders[name]; }
 Texture ResourceManager::getTexture(std::string name) { return textures[name]; }
 
 void ResourceManager::flush() {
-    for(auto iter : shaders) glDeleteProgram(iter.second.ID);
-    for(auto iter : textures) glDeleteTextures(1, &iter.second.ID);
+    for(auto iter: shaders) glDeleteProgram(iter.second.ID);
+    for(auto iter: textures) glDeleteTextures(1, &iter.second.ID);
 }
 
 Shader ResourceManager::loadShaderFromFile(const char *vShaderFile, const char *fShaderFile, const char *gShaderFile) {
@@ -54,8 +57,7 @@ Shader ResourceManager::loadShaderFromFile(const char *vShaderFile, const char *
 }
 
 Texture ResourceManager::loadTextureFromFile(const char *file, bool alpha) {
-    // create texture object
-    Texture texture;
+    Texture texture; // create texture object
     if (alpha) texture.Internal_Format = GL_RGBA, texture.Image_Format = GL_RGBA;
 
     int width, height, nrChannels;

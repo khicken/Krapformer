@@ -1,7 +1,7 @@
 #ifndef TEXTURE_H
 #define TEXTURE_H
 
-#include "Main.h"
+#include "Libraries.h"
 
 class Texture {
 public:
@@ -21,6 +21,10 @@ public:
     }
 
     void Generate(unsigned int width, unsigned int height, unsigned char* data) {
+        glPixelStorei(GL_UNPACK_ALIGNMENT, 1); // just in case if width and height return segmentation fault
+        glPixelStorei(GL_UNPACK_ROW_LENGTH, 0);
+        glPixelStorei(GL_UNPACK_SKIP_PIXELS, 0);
+        glPixelStorei(GL_UNPACK_SKIP_ROWS, 0);
         this->Width = width;
         this->Height = height;
         // create Texture

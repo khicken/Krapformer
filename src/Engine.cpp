@@ -4,13 +4,15 @@ Sprite2D *sprite;
 Sprite3D *cube;
 Camera *camera;
 
-Engine::Engine(unsigned int windowwidth, unsigned int windowheight) : state(GAME_INGAME), keys() {
+Engine::Engine(unsigned int windowwidth, unsigned int windowheight) : TITLE("wat"), state(GAME_INGAME), keys() {
     this->WINDOW_WIDTH = windowwidth;
     this->WINDOW_HEIGHT = windowheight;
 }
 
 Engine::~Engine() {
     delete sprite;
+    delete cube;
+    delete camera;
 }
 
 void Engine::windowInit(GLFWwindow* window) {
@@ -21,15 +23,17 @@ void Engine::windowInit(GLFWwindow* window) {
     glfwSetWindowPos(window, this->MONITOR_WIDTH/2 - this->WINDOW_WIDTH/2, this->MONITOR_HEIGHT/2 - this->WINDOW_HEIGHT/2);
 
     glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
-    glfwSetCursorPos(window, camera->lastPosX, camera->lastPosY);
+    glfwSetCursorPos(window, 500, 500);
+
+    glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 }
 
-void Engine::init() {
+void Engine::init() { // load objects and such
     ResourceManager::loadShader("./shaders/vs_2d.glsl", "./shaders/fs_2d.glsl", nullptr, "2D");
     glm::mat4 projection = glm::ortho(0.0f, static_cast<float>(this->WINDOW_WIDTH), static_cast<float>(this->WINDOW_HEIGHT), 0.0f, -1.0f, 1.0f);
-    ResourceManager::getShader("2D").use().setInt("image", 0);
+    ResourceManager::getShader("2D").use().setInt("2D", 0);
     ResourceManager::getShader("2D").setMat4("projection", projection);
-    sprite = new Sprite2D(ResourceManager::getShader("2D"));
+    // sprite = new Sprite2D(ResourceManager::getShader("2D"));
     ResourceManager::loadTexture("./assets/new.jpg", true, "goomba");
 }
 
@@ -42,8 +46,8 @@ void Engine::update() {
 }
 
 void Engine::render() {
-    sprite->drawSprite(ResourceManager::getTexture("goomba"), glm::vec2(200.0f, 200.0f), glm::vec2(300.0f, 400.0f), 45.0f, glm::vec3(0.0f, 1.0f, 0.0f));
-    cube->drawSprite(ResourceManager::getTexture("goomba"), glm::vec3(1.0f, 3.0f, 0.0f), glm::vec3(10.0f, 10.0f, 10.0f), 45.0f, glm::vec3(1.0f, 1.0f, 1.0f))
+    // sprite->drawSprite(ResourceManager::getTexture("goomba"), glm::vec2(200.0f, 200.0f), glm::vec2(300.0f, 400.0f), 45.0f, glm::vec3(0.0f, 1.0f, 0.0f));
+    // cube->drawSprite(ResourceManager::getTexture("goomba"), glm::vec3(1.0f, 3.0f, 0.0f), glm::vec3(10.0f, 10.0f, 10.0f), 45.0f, glm::vec3(1.0f, 1.0f, 1.0f));
 }
 
 void Engine::pollEvents(float dt) {
@@ -53,4 +57,12 @@ void Engine::pollEvents(float dt) {
         if(this->keys[GLFW_KEY_A]) camera->keyEvent(LEFT, dt);
         if(this->keys[GLFW_KEY_D]) camera->keyEvent(RIGHT, dt);
     }
+}
+
+void Engine::updateMouse(double xpos, double ypos) {
+    camera->mouseEvent((float)xpos, (float)ypos);
+}
+
+void Engine::updateScroll(double yoffset) {
+    camera->scrollEvent(yoffset);
 }

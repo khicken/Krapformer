@@ -1,7 +1,10 @@
 #ifndef ENGINE_H
 #define ENGINE_H
 
-#include "Main.h"
+#include "ResourceManager.h"
+#include "Sprite2D.h"
+#include "Sprite3D.h"
+#include "Camera.h"
 
 enum GameState {
     GAME_INGAME,
@@ -15,6 +18,7 @@ public:
     GameState state;
     // window related variables
     unsigned int WINDOW_WIDTH, WINDOW_HEIGHT, MONITOR_WIDTH, MONITOR_HEIGHT;
+    const char* TITLE;
     bool fullscreen;
     bool keys[1024];
 
@@ -25,6 +29,9 @@ public:
     void update();
     void render();
     void pollEvents(float dt);
+
+    void updateMouse(double xpos, double ypos);
+    void updateScroll(double yoffset);
 private:
 };
 

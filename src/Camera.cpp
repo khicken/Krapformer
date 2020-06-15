@@ -1,20 +1,35 @@
 #include "Camera.h"
 
-Camera::Camera(glm::vec3 pos = glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3 u = glm::vec3(0.0f, 1.0f, 0.0f), float y = d_yaw, float p = d_pitch) :
-  front(glm::vec3(0.0f, 0.0f, -1.0f)), invertY(g_invertY), movementSpeed(g_movementSpeed), mouseSensitivity(0.1f), fov(g_fov), lastPosX(windowWidth/2), lastPosY(windowHeight/2) {
+// default or global camera values (d prefix)
+float d_pitch = 0.0f;
+float d_yaw = -90.0f;
+
+// customizable mouse stuff (global with g prefix)
+float g_movementSpeed = 5.0f;
+float g_mouseSensitivity = 1.0f;
+float g_fov = 45.0f;
+float g_minfov = 1.0f, g_maxfov = 45.0f;
+bool g_invertY = false; // invert y-movement idk why
+
+Camera::Camera(unsigned int windowWidth = 1280, unsigned int windowHeight = 720, glm::vec3 pos = glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3 u = glm::vec3(0.0f, 1.0f, 0.0f), float y = d_yaw, float p = d_pitch) :
+  front(glm::vec3(0.0f, 0.0f, -1.0f)), invertY(g_invertY), movementSpeed(g_movementSpeed), mouseSensitivity(0.1f), fov(g_fov) {
     this->position = pos;
     this->worldUp = u;
     this->yaw = y;
     this->pitch = p;
+    this->lastPosX = windowWidth/2;
+    this->lastPosY = windowHeight/2;
     this->updateCameraVectors();    
 }
 
-Camera::Camera(float posX, float posY, float posZ, float upX, float upY, float upZ, float y, float p) : 
-    front(glm::vec3(0.0f, 0.0f, -1.0f)), invertY(g_invertY), movementSpeed(g_movementSpeed), mouseSensitivity(0.1f), fov(g_fov), lastPosX(windowWidth/2), lastPosY(windowHeight/2) {
+Camera::Camera(unsigned int windowWidth, unsigned int windowHeight, float posX, float posY, float posZ, float upX, float upY, float upZ, float y, float p) : 
+    front(glm::vec3(0.0f, 0.0f, -1.0f)), invertY(g_invertY), movementSpeed(g_movementSpeed), mouseSensitivity(0.1f), fov(g_fov) {
     this->position = glm::vec3(posX, posY, posZ);
     this->worldUp = glm::vec3(upX, upY, upZ);
     this->yaw = y;
     this->pitch = p;
+    this->lastPosX = windowWidth/2;
+    this->lastPosY = windowHeight/2;
     this->updateCameraVectors();
 }
 

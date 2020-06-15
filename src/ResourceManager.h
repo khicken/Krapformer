@@ -1,7 +1,16 @@
 #ifndef RESOURCEMANAGER_H
 #define RESOURCEMANAGER_H
 
-#include "Main.h"
+#include <iostream>
+#include <string>
+#include <fstream>
+#include <sstream>
+#include <map>
+
+#include "Libraries.h"
+
+#include "Shader.h"
+#include "Texture.h"
 
 class ResourceManager {
 public:
