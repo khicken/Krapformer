@@ -90,9 +90,6 @@ RECENT REVISION HISTORY:
     Blazej Dariusz Roszkowski                  Alexander Veselov
 */
 
-#ifndef STBI_INCLUDE_STB_IMAGE_H
-#define STBI_INCLUDE_STB_IMAGE_H
-
 // DOCUMENTATION
 //
 // Limitations:
@@ -298,7 +295,8 @@ RECENT REVISION HISTORY:
 //     want the zlib decoder to be available, #define STBI_SUPPORT_ZLIB
 //
 
-
+#ifndef STB_IMAGE_LOADING_THING
+#define STB_IMAGE_LOADING_THING
 #ifndef STBI_NO_STDIO
 #include <stdio.h>
 #endif // STBI_NO_STDIO
