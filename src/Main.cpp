@@ -87,6 +87,8 @@ int main() {
         // refresh frame
         glClearColor(0.9f, 1.0f, 0.9f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+        
+        game.render();
 
         game.pollEvents(deltaTime);
         glfwSwapBuffers(window);
@@ -104,11 +106,7 @@ void framebufferSizeCallback(GLFWwindow* window, int width, int height) { // cal
 }
 
 void keyCallback(GLFWwindow* window, int key, int scancode, int action, int mods) {
-    // if(key == GLFW_KEY_ESCAPE) this->state = this->state == GAME_PAUSED : this->state = GAME_INGAME ? this->state = GAME_PAUSED; // switch between paused or ingame
-    if(key >= 0 && key < 1024) {
-        if (action == GLFW_PRESS) game.keys[key] = true;
-        else if(action == GLFW_RELEASE) game.keys[key] = false;
-    }
+    game.updateKeys(window, key, action);
 }
 
 void mouseCallback(GLFWwindow* window, double xpos, double ypos) {

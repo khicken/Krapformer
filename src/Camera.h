@@ -43,7 +43,6 @@ public:
     }
 
     void mouseEvent(float xpos, float ypos) {
-        std::cout << this->yaw << " " << std::endl;
         float xOffset = xpos - lastPosX;
         float yOffset = this->invertY ? ypos - this->lastPosY : this->lastPosY - ypos;
         this->lastPosX = xpos, this->lastPosY = ypos;
@@ -81,7 +80,6 @@ public:
 private:
     glm::vec3 front_no_pitch;
     void updateCameraVectors() {
-            std::cout << "here: " << this->lastPosX << std::endl;  
     // need to use on init and every mouse movement (to update camera, duh)
     glm::vec3 direction;
     direction.x = cos(glm::radians(this->yaw)) * cos(glm::radians(this->pitch));

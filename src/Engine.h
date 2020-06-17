@@ -33,6 +33,7 @@ public:
 
     void updateMouse(double xpos, double ypos);
     void updateScroll(double yoffset);
+    void updateKeys(GLFWwindow* window, int key, int action);
 private:
 };
 

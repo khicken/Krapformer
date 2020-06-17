@@ -1,6 +1,6 @@
 #include "Sprite2D.h"
 
-Sprite2D::Sprite2D(Shader &shader) {
+Sprite2D::Sprite2D(const Shader &shader) {
     this->shader = shader;
     this->initRenderData();
 }
@@ -9,7 +9,7 @@ Sprite2D::~Sprite2D() {
     glDeleteVertexArrays(1, &this->quadVAO);
 }
 
-void Sprite2D::drawSprite(Texture &texture, glm::vec2 position, glm::vec2 size, float rotate, glm::vec3 color) {
+void Sprite2D::drawSprite(const Texture &texture, glm::vec2 position, glm::vec2 size, float rotate, glm::vec3 color) {
     this->shader.use();
     glm::mat4 model = glm::mat4(1.0f);
     model = glm::translate(model, glm::vec3(position, 0.0f));  // first translate (scale, rotation, then translation)

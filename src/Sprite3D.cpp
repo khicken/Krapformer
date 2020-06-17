@@ -1,6 +1,6 @@
 #include "Sprite3D.h"
 
-Sprite3D::Sprite3D(Shader &shader) {
+Sprite3D::Sprite3D(const Shader &shader) {
     this->shader = shader;
     this->initRenderData();
 }
@@ -10,7 +10,7 @@ Sprite3D::~Sprite3D() {
 }
 
 
-void Sprite3D::drawSprite(Texture &texture, glm::vec3 position, glm::vec3 size, float rotate, glm::vec3 color) {
+void Sprite3D::drawSprite(const Texture &texture, glm::vec3 position, glm::vec3 size, float rotate, glm::vec3 color) {
     this->shader.use();
     glm::mat4 model = glm::mat4(1.0f);
     model = glm::translate(model, glm::vec3(position));  // first translate (transformations are: scale happens first, then rotation, and then final translation happens; reversed order)
