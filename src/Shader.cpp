@@ -1,8 +1,7 @@
 #include "Shader.h"
 
-Shader &Shader::use() {
+void Shader::use() {
     glUseProgram(this->ID);
-    return *this;
 }
 
 void Shader::compile(const char* vertexPath, const char* fragmentPath, const char* geometryPath) {
@@ -44,11 +43,11 @@ void Shader::compile(const char* vertexPath, const char* fragmentPath, const cha
 
 void Shader::setBool(const char* name, bool value, bool useShader) {
     if(useShader) this->use();
-    glUniform1i(glGetUniformLocation(ID, name), (int)value);
+    glUniform1i(glGetUniformLocation(this->ID, name), (int)value);
 }
 void Shader::setInt(const char* name, int value, bool useShader) {
     if(useShader) this->use();
-    glUniform1i(glGetUniformLocation(ID, name), value);
+    glUniform1i(glGetUniformLocation(this->ID, name), value);
 }
 void Shader::setVec2(const char *name, float x, float y, bool useShader) {
     if(useShader) this->use();
@@ -90,6 +89,8 @@ void Shader::checkCompileErrors(unsigned int object, std::string type) {
             glGetShaderInfoLog(object, maxLength, &bufferSize, buffer);
             std::cout << "ERROR::SHADER COMPILATION ERROR of type: " << type << "\n" << buffer << "\n *---------------------------------------------------* " << std::endl;
             delete[] buffer;
+        } else {
+            std::cout << "yeet" << std::endl;
         }
     } else { // then it must be program
         glGetProgramiv(object, GL_LINK_STATUS, &success);

@@ -54,7 +54,7 @@ int main() {
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE); // using core glfw functions
     glfwWindowHint(GLFW_RESIZABLE, false);
 
-    if(OS == 1) glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE); // iOS supports only opengl versions forward to the version of program/system
+    // if(OS == 1) glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE); // iOS supports only opengl versions forward to the version of program/system
 
     GLFWwindow* window = glfwCreateWindow(game.WINDOW_WIDTH, game.WINDOW_HEIGHT, game.TITLE, nullptr, nullptr);
     if(window == nullptr) { // check if glfw is ok
@@ -74,7 +74,7 @@ int main() {
     glfwSetCursorPosCallback(window, mouseCallback);
     glfwSetScrollCallback(window, scrollCallback);
 
-    glEnable(GL_DEPTH_TEST); // enable z-axis depth (we're working with 3d here!)
+    // glEnable(GL_DEPTH_TEST); // enable z-axis depth (we're working with 3d here!)
 
     game.init();
 

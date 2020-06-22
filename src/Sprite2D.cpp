@@ -1,6 +1,6 @@
 #include "Sprite2D.h"
 
-Sprite2D::Sprite2D(const Shader &shader) {
+Sprite2D::Sprite2D(Shader shader) {
     this->shader = shader;
     this->initRenderData();
 }

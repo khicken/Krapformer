@@ -7,6 +7,7 @@ uniform mat4 model;
 uniform mat4 projection;
 
 void main() {
-    gl_Position = projection * model * vec4(vertex.xy, 1.0, 1.0);
-    TexCoords = vec2(vertex.z, vertex.w);
+    TexCoords = vertex.zw;
+    gl_Position = projection * model * vec4(vertex.x, vertex.y, 1.0, 1.0);
+    
 }
