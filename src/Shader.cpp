@@ -21,7 +21,7 @@ void Shader::compile(const char* vertexPath, const char* fragmentPath, const cha
     this->checkCompileErrors(fragmentS, "FRAGMENT");
 
     // compile geometry shader from source if passed
-    if (geometryPath != nullptr) {
+    if(geometryPath != nullptr) {
     geometryS = glCreateShader(GL_GEOMETRY_SHADER);
     glShaderSource(geometryS, 1, &geometryPath, NULL);
     glCompileShader(geometryS);
@@ -80,19 +80,26 @@ void Shader::setMat4(const char *name, const glm::mat4 &matrix, bool useShader) 
 }
 
 void Shader::checkCompileErrors(unsigned int object, std::string type) {
-    int success;
-    char infoLog[1024];
+    GLint success, maxLength;
     if(type != "PROGRAM") { // check if shader is throwing error
         glGetShaderiv(object, GL_COMPILE_STATUS, &success);
         if(!success) {
-            glGetShaderInfoLog(object, 1024, NULL, infoLog);
-            std::cout << "ERROR::SHADER_COMPILATION_ERROR of type: " << type << "\n" << infoLog << "\n *---------------------------------------------------* " << std::endl;
+            glGetShaderiv(object, GL_INFO_LOG_LENGTH, &maxLength);
+            GLchar* buffer = new GLchar[maxLength];
+            int bufferSize;
+            glGetShaderInfoLog(object, maxLength, &bufferSize, buffer);
+            std::cout << "ERROR::SHADER COMPILATION ERROR of type: " << type << "\n" << buffer << "\n *---------------------------------------------------* " << std::endl;
+            delete[] buffer;
         }
     } else { // then it must be program
         glGetProgramiv(object, GL_LINK_STATUS, &success);
         if(!success) {
-            glGetProgramInfoLog(object, 1024, NULL, infoLog);
-            std::cout << "ERROR::PROGRAM_LINKING_ERROR of type: " << type << "\n" << infoLog << "\n *---------------------------------------------------* " << std::endl;
+            glGetProgramiv(object, GL_INFO_LOG_LENGTH, &maxLength);
+            GLchar* buffer = new GLchar[maxLength];
+            GLsizei bufferSize;
+            glGetProgramInfoLog(object, maxLength, &bufferSize, buffer);
+            std::cout << "ERROR::PROGRAM COMPILATION ERROR of type: " << type << "\n" << buffer << "\n *---------------------------------------------------* " << std::endl;
+            delete[] buffer;
         }
     }
 }

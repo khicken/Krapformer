@@ -6,7 +6,9 @@
  * 
  * Started with basic OpenGL in C++ the summer of 2019, but started learning core OpenGL in April of 2020.
  * 
- * Latest change: 6/14/20
+ * Latest change: 6/21/20
+ * 
+ * Important update: Shaders don't compile for an unknown reason, might just give up cause nothing wants to cooperate
  * 
 */
 

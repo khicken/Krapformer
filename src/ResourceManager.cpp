@@ -37,7 +37,7 @@ Shader ResourceManager::loadShaderFromFile(const char *vShaderFile, const char *
         vertexShaderFile.close(); fragmentShaderFile.close(); // close file handlers
         vertexCode = vShaderStream.str(), fragmentCode = fShaderStream.str(); // convert stream into string
         
-        if (gShaderFile != nullptr) { // load geometry shader if exists (same process for vertex and fragment shaders)
+        if(gShaderFile != nullptr) { // load geometry shader if exists (same process for vertex and fragment shaders)
         std::ifstream geometryShaderFile(gShaderFile);
         std::stringstream gShaderStream;
         gShaderStream << geometryShaderFile.rdbuf();
