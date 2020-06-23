@@ -4,6 +4,8 @@ Sprite2D *sprite;
 Sprite3D *cube;
 Camera camera(glm::vec3(0.0f, 3.0f, 0.0f));
 
+glm::mat4 projection2D, projection3D, view3D;
+
 Engine::Engine(unsigned int windowwidth, unsigned int windowheight) : TITLE("wat"), state(GAME_INGAME), keys() {
     this->WINDOW_WIDTH = windowwidth;
     this->WINDOW_HEIGHT = windowheight;
@@ -25,61 +27,86 @@ void Engine::windowInit(GLFWwindow* window) {
     glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
     glfwSetCursorPos(window, camera.lastPosX, camera.lastPosY);
 
+    this->state = GAME_INGAME;
+    std::cout << this->state << std::endl;
+
     glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 }
 
 void Engine::init() { // load objects and such
+    // load shaders
     ResourceManager::loadShader("C:\\Users\\kaleb\\Desktop\\3d\\src\\shaders\\vs_2d.glsl", "C:\\Users\\kaleb\\Desktop\\3d\\src\\shaders\\fs_2d.glsl", nullptr, "2D");
-    // ResourceManager::loadShader("./shaders/vs_3d.glsl", "./shaders/fs_3d.glsl", nullptr, "3D");
-    glm::mat4 projection = glm::ortho(0.0f, static_cast<float>(this->WINDOW_WIDTH), static_cast<float>(this->WINDOW_HEIGHT), 0.0f, -1.0f, 1.0f);
+    ResourceManager::loadShader("C:\\Users\\kaleb\\Desktop\\3d\\src\\shaders\\vs_3d.glsl", "C:\\Users\\kaleb\\Desktop\\3d\\src\\shaders\\fs_3d.glsl", nullptr, "3D");
+    
+    // set shader properties and projection matrix
+    projection2D = glm::ortho(0.0f, static_cast<float>(this->WINDOW_WIDTH), static_cast<float>(this->WINDOW_HEIGHT), 0.0f, -1.0f, 1.0f);
     ResourceManager::getShader("2D").use().setInt("image", 0);
-    ResourceManager::getShader("2D").setMat4("projection", projection);
+    ResourceManager::getShader("2D").setMat4("projection", projection2D);
+    projection3D =  glm::perspective(glm::radians(camera.fov), (float)this->WINDOW_WIDTH / (float)this->WINDOW_HEIGHT, 0.1f, 100.0f);
+    ResourceManager::getShader("3D").use().setInt("image", 0);
+
+
     sprite = new Sprite2D(ResourceManager::getShader("2D"));
-    // cube = new Sprite3D(ResourceManager::getShader("3D"));5
-    ResourceManager::loadTexture("C:\\Users\\kaleb\\Desktop\\3d\\src\\assets\\new.jpg", false, "goomba");
+    cube = new Sprite3D(ResourceManager::getShader("3D"));
+    ResourceManager::loadTexture("C:\\Users\\kaleb\\Desktop\\3d\\src\\assets\\awesomeface.png", true, "goomba");
 }
 
 void Engine::update() {
-    // update camera
-    glm::mat4 projection = glm::perspective(glm::radians(camera.fov), (float)this->WINDOW_WIDTH / (float)this->WINDOW_HEIGHT, 0.1f, 100.0f); // update perspective by fov every frame
-    // ResourceManager::getShader("3D").setMat4("projection", projection);
-
-    glm::mat4 view = camera.getViewMatrix();
-    // ResourceManager::getShader("3D").setMat4("view", view);
+    // update 3D objects by the camera
+    projection3D = glm::perspective(glm::radians(camera.fov), (float)this->WINDOW_WIDTH / (float)this->WINDOW_HEIGHT, 0.1f, 100.0f); // update perspective by fov every frame
+    view3D = camera.getViewMatrix();
+    ResourceManager::getShader("3D").setMat4("projection", projection3D);
+    ResourceManager::getShader("3D").setMat4("view", view3D);
 }
 
 void Engine::render() {
-    sprite->drawSprite(ResourceManager::getTexture("goomba"), glm::vec2(200.0f, 200.0f), glm::vec2(300.0f, 400.0f), 45.0f, glm::vec3(0.0f, 1.0f, 0.0f));
-    // cube->drawSprite(ResourceManager::getTexture("goomba"), glm::vec3(1.0f, 3.0f, 0.0f), glm::vec3(10.0f, 10.0f, 10.0f), 45.0f, glm::vec3(1.0f, 1.0f, 1.0f));
+    sprite->drawSprite(ResourceManager::getTexture("goomba"), glm::vec2(100.0f, 100.0f), glm::vec2(300.0f, 300.0f), 0.0f, glm::vec3(1.0f, 1.0f, 1.0f));
+    cube->drawSprite(ResourceManager::getTexture("goomba"), glm::vec3(10.0f, 10.0f, 1.0f), glm::vec3(200.0f, 200.0f, 200.0f), 0.0f, glm::vec3(1.0f, 1.0f, 1.0f));
+    cube->drawSprite(ResourceManager::getTexture("goomba"), glm::vec3(-10.0f, -10.0f, 1.0f), glm::vec3(1000.0f, 1000.0f, 1000.0f), 0.0f, glm::vec3(1.0f, 1.0f, 1.0f));
 }
 
-void Engine::pollEvents(float dt) {
+void Engine::pollEvents(GLFWwindow* window, float dt) {
     if(this->state == GAME_INGAME) {
-        // if(this->keys[GLFW_KEY_W]) camera.keyEvent(FORWARD, dt);
-        // if(this->keys[GLFW_KEY_S]) camera.keyEvent(BACKWARD, dt);
-        // if(this->keys[GLFW_KEY_A]) camera.keyEvent(LEFT, dt);
-        // if(this->keys[GLFW_KEY_D]) camera.keyEvent(RIGHT, dt);
+        if(this->keys[GLFW_KEY_W]) camera.keyEvent(FORWARD, dt);
+        if(this->keys[GLFW_KEY_S]) camera.keyEvent(BACKWARD, dt);
+        if(this->keys[GLFW_KEY_A]) camera.keyEvent(LEFT, dt);
+        if(this->keys[GLFW_KEY_D]) camera.keyEvent(RIGHT, dt);
+        if(this->keys[GLFW_KEY_SPACE]) camera.keyEvent(UP, dt);
+        if(this->keys[GLFW_KEY_LEFT_SHIFT]) camera.keyEvent(DOWN, dt);
+    } else if(this->state == GAME_PAUSED) {
+
     }
 }
 
 void Engine::updateKeys(GLFWwindow* window, int key, int action) {
-    if(this->state == GAME_INGAME) {
-        if(key == GLFW_KEY_ESCAPE) glfwSetWindowShouldClose(window, true); //this->state = this->state == GAME_PAUSED : this->state = GAME_INGAME ? this->state = GAME_PAUSED; // switch between paused or ingame
-        if(key >= 0 && key < 1024) {
-            if (action == GLFW_PRESS) this->keys[key] = true;
-            else if(action == GLFW_RELEASE) this->keys[key] = false;
+    if(key >= 0 && key < 1024) {
+        if(action == GLFW_PRESS) this->keys[key] = true;
+        else if(action == GLFW_RELEASE) this->keys[key] = false;
+    }
+
+    if(key == GLFW_KEY_ESCAPE && action == GLFW_RELEASE) {
+        if(this->state == GAME_INGAME) {
+            glfwSetCursorPos(window, this->WINDOW_WIDTH/2, this->WINDOW_HEIGHT/2);
+            glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
+            std::cout << "k" << std::endl;
+            this->state = GAME_PAUSED;
+        } else if(this->state == GAME_PAUSED) {
+            glfwSetCursorPos(window, this->WINDOW_WIDTH/2, this->WINDOW_HEIGHT/2);
+            glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+            std::cout << "no" << std::endl;
+            this->state = GAME_INGAME;
         }
     }
 }
 
 void Engine::updateMouse(double xpos, double ypos) {
     if(this->state == GAME_INGAME) {
-        // camera.mouseEvent((float)xpos, (float)ypos);
+        camera.mouseEvent((float)xpos, (float)ypos);
     }
 }
 
 void Engine::updateScroll(double yoffset) {
     if(this->state == GAME_INGAME) {
-        // camera.scrollEvent(yoffset);
+        camera.scrollEvent(yoffset);
     }
 }

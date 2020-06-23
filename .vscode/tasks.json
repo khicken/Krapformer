@@ -11,6 +11,8 @@
                 "-o",
                 "${fileDirname}\\run.exe",
                 // "-L${fileDirname}\\..\\glfw\\lib",
+                "-L${fileDirname}\\..\\freetype\\win64",
+                "-lfreetype",
                 "-lglfw3",
                 "-lglew32",
                 "-lopengl32",

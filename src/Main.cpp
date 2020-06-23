@@ -6,7 +6,7 @@
  * 
  * Started with basic OpenGL in C++ the summer of 2019, but started learning core OpenGL in April of 2020.
  * 
- * Latest change: 6/22/20
+ * Latest change: 6/23/20
  * 
 */
 
@@ -52,7 +52,7 @@ int main() {
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE); // using core glfw functions
     glfwWindowHint(GLFW_RESIZABLE, false);
 
-    // if(OS == 1) glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE); // iOS supports only opengl versions forward to the version of program/system
+    if(OS == 1) glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE); // iOS supports only opengl versions forward to the version of program/system
 
     GLFWwindow* window = glfwCreateWindow(game.WINDOW_WIDTH, game.WINDOW_HEIGHT, game.TITLE, nullptr, nullptr);
     if(window == nullptr) { // check if glfw is ok
@@ -72,7 +72,7 @@ int main() {
     glfwSetCursorPosCallback(window, mouseCallback);
     glfwSetScrollCallback(window, scrollCallback);
 
-    // glEnable(GL_DEPTH_TEST); // enable z-axis depth (we're working with 3d here!)
+    glEnable(GL_DEPTH_TEST); // enable z-axis depth (we're working with 3d here!)
 
     game.init();
 
@@ -88,9 +88,10 @@ int main() {
         glClearColor(0.9f, 1.0f, 0.9f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
         
+        game.update();
         game.render();
 
-        game.pollEvents(deltaTime);
+        game.pollEvents(window, deltaTime);
         glfwSwapBuffers(window);
         glfwPollEvents(); // poll regular glfw callbacks
     }

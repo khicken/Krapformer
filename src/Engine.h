@@ -29,7 +29,7 @@ public:
     void init(); // loads textures, shaders, and other objects
     void update();
     void render();
-    void pollEvents(float dt);
+    void pollEvents(GLFWwindow* window, float dt);
 
     void updateMouse(double xpos, double ypos);
     void updateScroll(double yoffset);
