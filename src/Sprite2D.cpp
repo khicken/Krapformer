@@ -1,6 +1,6 @@
 #include "Sprite2D.h"
 
-Sprite2D::Sprite2D(Shader shader) {
+Sprite2D::Sprite2D(const Shader &shader) {
     this->shader = shader;
     this->initRenderData();
 }
@@ -17,6 +17,8 @@ void Sprite2D::drawSprite(const Texture &texture, glm::vec2 position, glm::vec2 
     model = glm::translate(model, glm::vec3(0.5f * size.x, 0.5f * size.y, 0.0f)); // move origin of rotation to center of quad and resize
     model = glm::rotate(model, glm::radians(rotate), glm::vec3(0.0f, 0.0f, 1.0f)); // then rotate
     model = glm::translate(model, glm::vec3(-0.5f * size.x, -0.5f * size.y, 0.0f)); // move origin back
+
+    model = glm::scale(model, glm::vec3(size, 1.0f)); // last scale
 
     this->shader.setMat4("model", model);
     this->shader.setVec3("spriteColor", color);

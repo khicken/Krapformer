@@ -32,11 +32,10 @@ void Engine::init() { // load objects and such
     ResourceManager::loadShader("C:\\Users\\kaleb\\Desktop\\3d\\src\\shaders\\vs_2d.glsl", "C:\\Users\\kaleb\\Desktop\\3d\\src\\shaders\\fs_2d.glsl", nullptr, "2D");
     // ResourceManager::loadShader("./shaders/vs_3d.glsl", "./shaders/fs_3d.glsl", nullptr, "3D");
     glm::mat4 projection = glm::ortho(0.0f, static_cast<float>(this->WINDOW_WIDTH), static_cast<float>(this->WINDOW_HEIGHT), 0.0f, -1.0f, 1.0f);
-    ResourceManager::getShader("2D").use();
-    ResourceManager::getShader("2D").setInt("image", 0);
+    ResourceManager::getShader("2D").use().setInt("image", 0);
     ResourceManager::getShader("2D").setMat4("projection", projection);
     sprite = new Sprite2D(ResourceManager::getShader("2D"));
-    // cube = new Sprite3D(ResourceManager::getShader("3D"));
+    // cube = new Sprite3D(ResourceManager::getShader("3D"));5
     ResourceManager::loadTexture("C:\\Users\\kaleb\\Desktop\\3d\\src\\assets\\new.jpg", false, "goomba");
 }
 
@@ -50,16 +49,16 @@ void Engine::update() {
 }
 
 void Engine::render() {
-    sprite->drawSprite(ResourceManager::getTexture("goomba"), glm::vec2(glm::sin(glfwGetTime()), 200.0f), glm::vec2(300.0f, 400.0f), 45.0f, glm::vec3(0.0f, 1.0f, 0.0f));
+    sprite->drawSprite(ResourceManager::getTexture("goomba"), glm::vec2(200.0f, 200.0f), glm::vec2(300.0f, 400.0f), 45.0f, glm::vec3(0.0f, 1.0f, 0.0f));
     // cube->drawSprite(ResourceManager::getTexture("goomba"), glm::vec3(1.0f, 3.0f, 0.0f), glm::vec3(10.0f, 10.0f, 10.0f), 45.0f, glm::vec3(1.0f, 1.0f, 1.0f));
 }
 
 void Engine::pollEvents(float dt) {
     if(this->state == GAME_INGAME) {
-        if(this->keys[GLFW_KEY_W]) camera.keyEvent(FORWARD, dt);
-        if(this->keys[GLFW_KEY_S]) camera.keyEvent(BACKWARD, dt);
-        if(this->keys[GLFW_KEY_A]) camera.keyEvent(LEFT, dt);
-        if(this->keys[GLFW_KEY_D]) camera.keyEvent(RIGHT, dt);
+        // if(this->keys[GLFW_KEY_W]) camera.keyEvent(FORWARD, dt);
+        // if(this->keys[GLFW_KEY_S]) camera.keyEvent(BACKWARD, dt);
+        // if(this->keys[GLFW_KEY_A]) camera.keyEvent(LEFT, dt);
+        // if(this->keys[GLFW_KEY_D]) camera.keyEvent(RIGHT, dt);
     }
 }
 
@@ -75,12 +74,12 @@ void Engine::updateKeys(GLFWwindow* window, int key, int action) {
 
 void Engine::updateMouse(double xpos, double ypos) {
     if(this->state == GAME_INGAME) {
-        camera.mouseEvent((float)xpos, (float)ypos);
+        // camera.mouseEvent((float)xpos, (float)ypos);
     }
 }
 
 void Engine::updateScroll(double yoffset) {
     if(this->state == GAME_INGAME) {
-        camera.scrollEvent(yoffset);
+        // camera.scrollEvent(yoffset);
     }
 }

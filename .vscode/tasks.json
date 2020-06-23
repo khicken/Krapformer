@@ -9,12 +9,13 @@
                 "-g",
                 "${fileDirname}\\*.cpp",
                 "-o",
-                "${fileDirname}\\${fileBasenameNoExtension}.exe",
+                "${fileDirname}\\run.exe",
                 // "-L${fileDirname}\\..\\glfw\\lib",
                 "-lglfw3",
                 "-lglew32",
                 "-lopengl32",
-                "-lgdi32"
+                "-lgdi32",
+                // "-mwindows"
                 // "-lsoil2"
             ],
             "options": {

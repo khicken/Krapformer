@@ -12,7 +12,7 @@ class Shader {
 public:
     unsigned int ID; // state
     Shader() {};
-    void use();
+    Shader& use();
 
     // compile shader from source code
     void compile(const char* vertexPath, const char* fragmentPath, const char* geometryPath = nullptr); // note: geometry source code is optional
