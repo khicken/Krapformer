@@ -7,8 +7,6 @@
 #include <sstream>
 #include <map>
 
-#include "Libraries.h"
-
 #include "Shader.h"
 #include "Texture.h"
 

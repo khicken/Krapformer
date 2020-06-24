@@ -1,7 +1,10 @@
+//#pragma comment(linker, "/SUBSYSTEM:windows /ENTRY:mainCRTStartup") // hide console for windows
+
 #include "Engine.h"
 
 Sprite2D *sprite;
 Sprite3D *cube;
+TextRenderer* text;
 Camera camera(glm::vec3(0.0f, 3.0f, 0.0f));
 
 glm::mat4 projection2D, projection3D, view3D;
@@ -14,6 +17,7 @@ Engine::Engine(unsigned int windowwidth, unsigned int windowheight) : TITLE("wat
 Engine::~Engine() {
     delete sprite;
     delete cube;
+    delete text;
     // delete &camera;
 }
 
@@ -35,8 +39,9 @@ void Engine::windowInit(GLFWwindow* window) {
 
 void Engine::init() { // load objects and such
     // load shaders
-    ResourceManager::loadShader("C:\\Users\\kaleb\\Desktop\\3d\\src\\shaders\\vs_2d.glsl", "C:\\Users\\kaleb\\Desktop\\3d\\src\\shaders\\fs_2d.glsl", nullptr, "2D");
-    ResourceManager::loadShader("C:\\Users\\kaleb\\Desktop\\3d\\src\\shaders\\vs_3d.glsl", "C:\\Users\\kaleb\\Desktop\\3d\\src\\shaders\\fs_3d.glsl", nullptr, "3D");
+    ResourceManager::loadShader(".\\src\\shaders\\vs_2d.glsl", ".\\src\\shaders\\fs_2d.glsl", nullptr, "2D");
+    ResourceManager::loadShader(".\\src\\shaders\\vs_3d.glsl", ".\\src\\shaders\\fs_3d.glsl", nullptr, "3D");
+    ResourceManager::loadShader(".\\src\\shaders\\vs_txt.glsl", ".\\src\\shaders\\fs_txt.glsl", nullptr, "txt");
     
     // set shader properties and projection matrix
     projection2D = glm::ortho(0.0f, static_cast<float>(this->WINDOW_WIDTH), static_cast<float>(this->WINDOW_HEIGHT), 0.0f, -1.0f, 1.0f);
@@ -45,10 +50,12 @@ void Engine::init() { // load objects and such
     projection3D =  glm::perspective(glm::radians(camera.fov), (float)this->WINDOW_WIDTH / (float)this->WINDOW_HEIGHT, 0.1f, 100.0f);
     ResourceManager::getShader("3D").use().setInt("image", 0);
 
-
     sprite = new Sprite2D(ResourceManager::getShader("2D"));
     cube = new Sprite3D(ResourceManager::getShader("3D"));
-    ResourceManager::loadTexture("C:\\Users\\kaleb\\Desktop\\3d\\src\\assets\\awesomeface.png", true, "goomba");
+    text = new TextRenderer(ResourceManager::getShader("txt"));
+
+    text->init();
+    ResourceManager::loadTexture(".\\src\\assets\\awesomeface.png", true, "goomba");
 }
 
 void Engine::update() {
@@ -60,9 +67,10 @@ void Engine::update() {
 }
 
 void Engine::render() {
-    sprite->drawSprite(ResourceManager::getTexture("goomba"), glm::vec2(100.0f, 100.0f), glm::vec2(300.0f, 300.0f), 0.0f, glm::vec3(1.0f, 1.0f, 1.0f));
-    cube->drawSprite(ResourceManager::getTexture("goomba"), glm::vec3(10.0f, 10.0f, 1.0f), glm::vec3(200.0f, 200.0f, 200.0f), 0.0f, glm::vec3(1.0f, 1.0f, 1.0f));
+    sprite->drawSprite(ResourceManager::getTexture("goomba"), glm::vec2((float)this->WINDOW_WIDTH-300.0f, (float)this->WINDOW_HEIGHT - 300.0f), glm::vec2(300.0f, 300.0f), 0.0f, glm::vec3(1.0f, 1.0f, 1.0f));
+    cube->drawSprite(ResourceManager::getTexture("goomba"), glm::vec3(10.0f, 10.0f, (float)glm::cos(glfwGetTime())), glm::vec3(200.0f, 200.0f, 200.0f), 0.0f, glm::vec3(1.0f, 1.0f, 1.0f));
     cube->drawSprite(ResourceManager::getTexture("goomba"), glm::vec3(-10.0f, -10.0f, 1.0f), glm::vec3(1000.0f, 1000.0f, 1000.0f), 0.0f, glm::vec3(1.0f, 1.0f, 1.0f));
+    text->drawText("lol", 10.0f, 10.0f, 10.0f, glm::vec3(1.0f, 1.0f, 0.0f));
 }
 
 void Engine::pollEvents(GLFWwindow* window, float dt) {
@@ -88,12 +96,10 @@ void Engine::updateKeys(GLFWwindow* window, int key, int action) {
         if(this->state == GAME_INGAME) {
             glfwSetCursorPos(window, this->WINDOW_WIDTH/2, this->WINDOW_HEIGHT/2);
             glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
-            std::cout << "k" << std::endl;
             this->state = GAME_PAUSED;
         } else if(this->state == GAME_PAUSED) {
             glfwSetCursorPos(window, this->WINDOW_WIDTH/2, this->WINDOW_HEIGHT/2);
             glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
-            std::cout << "no" << std::endl;
             this->state = GAME_INGAME;
         }
     }

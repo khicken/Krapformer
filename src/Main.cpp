@@ -5,6 +5,7 @@
  * View commits and changes on the Github repo: https://github.com/khicken/3d7
  * 
  * Started with basic OpenGL in C++ the summer of 2019, but started learning core OpenGL in April of 2020.
+ * This was transferred to a vs project as of 6/23/20
  * 
  * Latest change: 6/23/20
  * 
@@ -33,18 +34,18 @@ Engine game(DEFAULT_WINDOW_WIDTH, DEFAULT_WINDOW_HEIGHT);
 
 int main() {
     float deltaTime = 0.0f, lastTime = 0.0f;
-    glm::vec3 cubePositions[] = { // cube positions
-        glm::vec3( 0.0f,  0.0f,  0.0f),
-        glm::vec3( 2.0f,  5.0f, -15.0f),
-        glm::vec3(-1.5f, -2.2f, -2.5f),
-        glm::vec3(-3.8f, -2.0f, -12.3f),
-        glm::vec3( 2.4f, -0.4f, -3.5f),
-        glm::vec3(-1.7f,  3.0f, -7.5f),
-        glm::vec3( 1.3f, -2.0f, -2.5f),
-        glm::vec3( 1.5f,  2.0f, -2.5f),
-        glm::vec3( 1.5f,  0.2f, -1.5f),
-        glm::vec3(-1.3f,  1.0f, -1.5f)
-    };
+    //glm::vec3 cubePositions[] = { // cube positions
+    //    glm::vec3( 0.0f,  0.0f,  0.0f),
+    //    glm::vec3( 2.0f,  5.0f, -15.0f),
+    //    glm::vec3(-1.5f, -2.2f, -2.5f),
+    //    glm::vec3(-3.8f, -2.0f, -12.3f),
+    //    glm::vec3( 2.4f, -0.4f, -3.5f),
+    //    glm::vec3(-1.7f,  3.0f, -7.5f),
+    //    glm::vec3( 1.3f, -2.0f, -2.5f),
+    //    glm::vec3( 1.5f,  2.0f, -2.5f),
+    //    glm::vec3( 1.5f,  0.2f, -1.5f),
+    //    glm::vec3(-1.3f,  1.0f, -1.5f)
+    //};
     
     glfwInit(); // initialize glfw
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3); // using glfw 3.x
@@ -62,8 +63,10 @@ int main() {
     }
     glfwMakeContextCurrent(window); // select the window
 
-    glewInit();
-    glewExperimental = true;
+    if(!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress)) {
+        std::cout << "uh glad broke" << std::endl;
+        return -1;
+    }
 
     game.windowInit(window);
 

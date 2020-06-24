@@ -2,10 +2,12 @@
 #define ENGINE_H
 
 #include "ResourceManager.h"
-#include "Libraries.h"
 #include "Sprite2D.h"
 #include "Sprite3D.h"
 #include "Camera.h"
+#include "TextRenderer.h"
+
+#include <GLFW/glfw3.h>
 
 enum GameState {
     GAME_INGAME,

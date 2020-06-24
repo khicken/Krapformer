@@ -3,7 +3,9 @@
 
 #include <iostream>
 
-#include "Libraries.h"
+#include <glm/glm.hpp>
+#include <glm/gtc/matrix_transform.hpp>
+#include <glm/gtc/type_ptr.hpp>
 
 enum Directions { // other classes might need to know player's direction for later physics
     FORWARD,
@@ -25,6 +27,7 @@ public:
     bool invertY;
     float velocity;
     float lastPosX, lastPosY;
+    float pausedPosX, pausedPosY;
 
     Camera(glm::vec3 pos = glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3 u = glm::vec3(0.0f, 1.0f, 0.0f), float y = d_yaw, float p = d_pitch);
     Camera(float posX, float posY, float posZ, float upX, float upY, float upZ, float y, float p);

@@ -1,0 +1,2 @@
+D:\Documents\Programming\FPS\x64\Debug\FPS.exe
+D:\Documents\Programming\FPS\x64\Debug\FPS.pdb

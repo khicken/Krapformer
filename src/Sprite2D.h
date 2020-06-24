@@ -4,6 +4,11 @@
 #include "Shader.h"
 #include "Texture.h"
 
+#include <glm/glm.hpp>
+#include <glm/gtc/matrix_transform.hpp>
+#include <glm/gtc/type_ptr.hpp>
+
+
 class Sprite2D {
 public:
     Sprite2D(const Shader &shader);
