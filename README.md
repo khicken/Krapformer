@@ -5,19 +5,35 @@ Libraries using/will be using: glfw3, glad, stb_image(soil2 lib buggy), freetype
 
 TODO:
     - Window initialization with glfw (DONE)
+    
     - Engine class with resource manager (DONE)
+    
     - Texture loading and sprite rendering (DONE)
+    
     - Basic 3D Camera environment (DONE)
+    
     - Text Rendering (WIP)
+    
     - Buttons (TODO)
+    
     - Collision detection (TODO)
+    
     - Model loading (TODO)
+    
     - Object with physics and such (TODO)
+    
     - Animated Character movement (TODO)
+    
     - Camera with physics and such (TODO)
+    
     - Lighting (TODO)
+    
     - Smart buffering (TODO)
+    
     - Anti aliasing (TODO)
+    
     - Maps (TODO)
+    
     - Multiplayer (TODO)
+    
     - think of more things todo (WIP)
