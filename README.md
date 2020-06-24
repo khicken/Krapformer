@@ -1,4 +1,4 @@
-# 3d
+# FPS
 Attempt to create an FPS game with OpenGL and more.
 
 Libraries using/will be using: glfw3, glad, freetype, stb_image(SOIL2 library buggy), assimp, irrklang
