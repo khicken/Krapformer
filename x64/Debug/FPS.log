@@ -6,7 +6,7 @@ D:\Documents\Programming\FPS\src\Main.cpp(86,28): warning C4244: 'initializing':
   Sprite2D.cpp
   Sprite3D.cpp
   TextRenderer.cpp
-D:\Documents\Programming\FPS\src\TextRenderer.cpp(58,33): warning C4838: conversion from 'FT_Pos' to 'unsigned int' requires a narrowing conversion
+D:\Documents\Programming\FPS\src\TextRenderer.cpp(56,33): warning C4838: conversion from 'FT_Pos' to 'unsigned int' requires a narrowing conversion
   Texture.cpp
   Generating Code...
   glad.c
