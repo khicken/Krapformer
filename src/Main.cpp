@@ -7,7 +7,7 @@
  * Started with basic OpenGL in C++ the summer of 2019, but started learning core OpenGL in April of 2020.
  * This was transferred to a vs project as of 6/23/20
  * 
- * Latest change: 6/23/20
+ * Latest change: 7/2/20
  * 
 */
 

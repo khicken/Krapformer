@@ -1,19 +1,5 @@
 ﻿  Engine.cpp
   Main.cpp
-D:\Documents\Programming\FPS\src\Main.cpp(86,28): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
-  ResourceManager.cpp
-  Shader.cpp
-  Sprite2D.cpp
-  Sprite3D.cpp
-  TextRenderer.cpp
-D:\Documents\Programming\FPS\src\TextRenderer.cpp(56,33): warning C4838: conversion from 'FT_Pos' to 'unsigned int' requires a narrowing conversion
-  Texture.cpp
+C:\Users\kaleb\Desktop\FPS\src\Main.cpp(86,28): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
   Generating Code...
-  glad.c
-Main.obj : error LNK2005: "unsigned int VAO" (?VAO@@3IA) already defined in Engine.obj
-Main.obj : error LNK2005: "unsigned int VBO" (?VBO@@3IA) already defined in Engine.obj
-Main.obj : error LNK2005: "class std::map<char,struct Character,struct std::less<char>,class std::allocator<struct std::pair<char const ,struct Character> > > Characters" (?Characters@@3V?$map@DUCharacter@@U?$less@D@std@@V?$allocator@U?$pair@$$CBDUCharacter@@@std@@@3@@std@@A) already defined in Engine.obj
-TextRenderer.obj : error LNK2005: "unsigned int VAO" (?VAO@@3IA) already defined in Engine.obj
-TextRenderer.obj : error LNK2005: "unsigned int VBO" (?VBO@@3IA) already defined in Engine.obj
-TextRenderer.obj : error LNK2005: "class std::map<char,struct Character,struct std::less<char>,class std::allocator<struct std::pair<char const ,struct Character> > > Characters" (?Characters@@3V?$map@DUCharacter@@U?$less@D@std@@V?$allocator@U?$pair@$$CBDUCharacter@@@std@@@3@@std@@A) already defined in Engine.obj
-D:\Documents\Programming\FPS\x64\Debug\FPS.exe : fatal error LNK1169: one or more multiply defined symbols found
+  FPS.vcxproj -> C:\Users\kaleb\Desktop\FPS\x64\Debug\FPS.exe

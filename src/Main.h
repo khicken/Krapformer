@@ -5,6 +5,7 @@
 #if defined(__WIN32) || defined(_WIN64)
 #include <tchar.h>
 #include <windows.h>
+//#pragma comment(linker, "/SUBSYSTEM:windows /ENTRY:mainCRTStartup") // disable console
 const int OS = 0;
 #elif defined(__APPLE__) || defined(__MACH__)
 const int OS = 1;

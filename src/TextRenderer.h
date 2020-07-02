@@ -15,8 +15,6 @@ struct Character {
     glm::ivec2   Bearing;   // Offset from baseline to left/top of glyph
     unsigned int Advance;   // Horizontal offset to advance to next glyph
 };
-std::map<GLchar, Character> Characters;
-unsigned int VAO, VBO;
 
 class TextRenderer {
 public:
@@ -25,7 +23,8 @@ public:
     void init();
 	void drawText(std::string text, float x, float y, float scale, glm::vec3 color);
 private:
-
+    std::map<GLchar, Character> Characters;
+    unsigned int TXT_VAO, TXT_VBO;
 };
 
 #endif

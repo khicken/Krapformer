@@ -54,7 +54,7 @@ void Engine::init() { // load objects and such
     cube = new Sprite3D(ResourceManager::getShader("3D"));
     text = new TextRenderer(ResourceManager::getShader("txt"));
 
-    text->init();
+    //text->init();
     ResourceManager::loadTexture(".\\src\\assets\\awesomeface.png", true, "goomba");
 }
 
@@ -70,7 +70,7 @@ void Engine::render() {
     sprite->drawSprite(ResourceManager::getTexture("goomba"), glm::vec2((float)this->WINDOW_WIDTH-300.0f, (float)this->WINDOW_HEIGHT - 300.0f), glm::vec2(300.0f, 300.0f), 0.0f, glm::vec3(1.0f, 1.0f, 1.0f));
     cube->drawSprite(ResourceManager::getTexture("goomba"), glm::vec3(10.0f, 10.0f, (float)glm::cos(glfwGetTime())), glm::vec3(200.0f, 200.0f, 200.0f), 0.0f, glm::vec3(1.0f, 1.0f, 1.0f));
     cube->drawSprite(ResourceManager::getTexture("goomba"), glm::vec3(-10.0f, -10.0f, 1.0f), glm::vec3(1000.0f, 1000.0f, 1000.0f), 0.0f, glm::vec3(1.0f, 1.0f, 1.0f));
-    text->drawText("lol", 10.0f, 10.0f, 10.0f, glm::vec3(1.0f, 1.0f, 0.0f));
+    //text->drawText("lol", 10.0f, 10.0f, 10.0f, glm::vec3(1.0f, 1.0f, 0.0f));
 }
 
 void Engine::pollEvents(GLFWwindow* window, float dt) {
