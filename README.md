@@ -1,4 +1,5 @@
 # FPS
+DISCLAIMER: this project is now archived. i'm really working on it (future 3d game development will be with unreal)
 Attempt to create a random FPS game with OpenGL and more.
 
 Libraries using/will be using: glfw3, glad, stb_image(soil2 lib buggy), freetype, irrklang, assimp, glm
@@ -8,7 +9,7 @@ TODO:
 - Engine class with resource manager (DONE)
 - Texture loading and sprite rendering (DONE)
 - Basic 3D Camera environment (DONE)
-- Text Rendering (WIP)
+- Text Rendering (WIP -- broken at the moment)
 - Buttons (TODO)
 - Collision detection (TODO)
 - Model loading (TODO)
