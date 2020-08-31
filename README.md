@@ -1,5 +1,5 @@
 # FPS
-DISCLAIMER: this project is now archived. i'm really working on it (future 3d game development will be with unreal)
+DISCLAIMER: this project is now archived. i'm going to begin working with unreal engine as i don't want to recreate the wheel.
 Attempt to create a random FPS game with OpenGL and more.
 
 Libraries using/will be using: glfw3, glad, stb_image(soil2 lib buggy), freetype, irrklang, assimp, glm
