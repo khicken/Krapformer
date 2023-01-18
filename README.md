@@ -1,4 +1,4 @@
-# FPS
+# Spinning Cube
 DISCLAIMER: This project is now archived. To create a good FPS game, consider using Unity or Unreal Engine, unless you want to add more spinning cubes.
 
 Libraries used: glfw3, glad, stb_image(soil2 lib buggy), freetype, irrklang, assimp, glm
