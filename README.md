@@ -1,10 +1,9 @@
 # FPS
-DISCLAIMER: this project is now archived. i'm going to begin working with unreal engine as i don't want to recreate the wheel.
-Attempt to create a random FPS game with OpenGL and more.
+DISCLAIMER: This project is now archived. To create a good FPS game, consider using Unity or Unreal Engine, unless you want to add more spinning cubes.
 
-Libraries using/will be using: glfw3, glad, stb_image(soil2 lib buggy), freetype, irrklang, assimp, glm
+Libraries used: glfw3, glad, stb_image(soil2 lib buggy), freetype, irrklang, assimp, glm
 
-TODO:
+OLD TODO:
 - Window initialization with glfw (DONE)
 - Engine class with resource manager (DONE)
 - Texture loading and sprite rendering (DONE)
