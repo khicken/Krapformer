@@ -3,21 +3,19 @@ DISCLAIMER: This project is now archived. To create a good FPS game, consider us
 
 Libraries used: glfw3, glad, stb_image(soil2 lib buggy), freetype, irrklang, assimp, glm
 
-OLD TODO:
+TASKS:
 - Window initialization with glfw (DONE)
 - Engine class with resource manager (DONE)
 - Texture loading and sprite rendering (DONE)
 - Basic 3D Camera environment (DONE)
-- Text Rendering (WIP -- broken at the moment)
-- Buttons (TODO)
+- Text Rendering (TODO)
+- 2D UI (TODO)
 - Collision detection (TODO)
 - Model loading (TODO)
 - Object with physics and such (TODO)
-- Animated Character movement (TODO)
-- Camera with physics and such (TODO)
 - Lighting (TODO)
 - Smart buffering (TODO)
 - Anti aliasing (TODO)
 - Maps (TODO)
 - Multiplayer (TODO)
-- think of more things todo (WIP)
+- Think of more things todo (TODO)
